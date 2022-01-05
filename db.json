@@ -1,0 +1,45 @@
+{
+    "data": [
+        {
+            "name": "LOGO",
+            "value": "",
+            "id": 1
+        },
+        {
+            "name": "MENU",
+            "value": [
+                "Product",
+                "Stock",
+                "Order",
+                ""
+            ],
+            "id": 2
+        }
+    ],
+    "product": [
+        {
+            "prod_id": "",
+            "prod_name": "",
+            "category": "",
+            "detail": "",
+            "price": "",
+            "image": ""
+        },
+        {
+            "prod_id": "",
+            "prod_name": "",
+            "category": "",
+            "detail": "",
+            "price": "",
+            "image": ""
+        },
+        {
+            "prod_id": "",
+            "prod_name": "",
+            "category": "",
+            "detail": "",
+            "price": "",
+            "image": ""
+        }
+    ]
+}
