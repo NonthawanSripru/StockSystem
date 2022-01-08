@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card color="grey lighten-3">
     <v-layout>
       <v-flex>
         <v-navigation-drawer
@@ -42,7 +42,7 @@
         </v-navigation-drawer>
       </v-flex>
       <v-flex xs12>
-        <v-card flat align="center" class="mt-5">
+        <v-card flat align="center" class="mt-5" color="grey lighten-3">
           <component v-bind:is="xcomponents"></component>
         </v-card>
       </v-flex>

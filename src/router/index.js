@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeMenu from '../components/homeMenu.vue'
+// import HomeMenu from '../components/homeMenu.vue'
 import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
@@ -10,11 +10,6 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
-  },
-  {
-    path: '/homeMenu#',
-    name: 'homeMenu',
-    component: HomeMenu
   },
   {
     path: '/home/:page',
