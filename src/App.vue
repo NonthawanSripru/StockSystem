@@ -2,10 +2,11 @@
   <v-app>
     <div>
       <v-card class="mx-auto overflow-hidden" height="auto">
-        <v-app-bar color="deep-purple" dark>
+        <v-app-bar color="#101357" dark>
+        <!-- <v-app-bar color="deep-purple" dark> -->
           <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
 
-          <v-toolbar-title>Stock control & Inventory</v-toolbar-title>
+          <v-toolbar-title><h2>Stock control & Inventory</h2></v-toolbar-title>
 
           <v-spacer></v-spacer>
 
