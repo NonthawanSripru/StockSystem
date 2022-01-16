@@ -23,18 +23,93 @@
       <v-data-table
         :headers="headers"
         :items="desserts"
-        sort-by="calories"
+        sort-by="category"
         class="elevation-1"
       >
+        <template v-slot:item.prod_id="{ item }">
+          <p class="mt-3" style="width: 100px">{{ item.prod_id }}</p>
+        </template>
+
         <template v-slot:item.image="{ item }"
           ><v-img :src="item.image" style="width: 200px; height: 150px"
         /></template>
+
+        <template v-slot:item.detail="{ item }">
+          <p class="mt-3" style="width: 150px">{{ item.detail }}</p>
+        </template>
+
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title>My Products</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
-            <v-dialog v-model="dialog" max-width="500px">
+
+            <v-dialog v-model="dialogCate" max-width="800px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="warning"
+                  dark
+                  class="mb-2 mr-2"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  Manage Category
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="text-h5">Manage Product's Category</span>
+                </v-card-title>
+
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="16" sm="6" md="3">
+                        <h3 class="mt-5">Add New Category</h3>
+                      </v-col>
+                      <v-col cols="16" sm="6" md="4">
+                        <v-text-field
+                          v-model="category.cate_id"
+                          label="Category ID"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="16" sm="6" md="4">
+                        <v-text-field
+                          v-model="category.cate_name"
+                          label="Category Name"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="16" sm="6" md="1">
+                        <v-icon class="mt-5" color="blue darken-1" @click="addCate">
+                          mdi-plus-circle
+                        </v-icon>
+                      </v-col>
+                    </v-row>
+                    <v-data-table
+                      :headers="cheaders"
+                      :items="categories"
+                      class="elevation-1"
+                    >
+                      <template v-slot:item.actions="{ item }">
+                        <v-icon small @click="deleteCate(item)">
+                          mdi-delete
+                        </v-icon>
+                      </template>
+                    </v-data-table>
+                  </v-container>
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="close">
+                    Cancel
+                  </v-btn>
+                  <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
+            <v-dialog v-model="dialog" max-width="800px">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   color="primary"
@@ -43,10 +118,7 @@
                   v-bind="attrs"
                   v-on="on"
                 >
-                  New Item
-                </v-btn>
-                <v-btn color="warning" dark class="mb-2 mr-2">
-                  Manage Category
+                  New Product
                 </v-btn>
               </template>
               <v-card>
@@ -57,36 +129,73 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <v-col cols="16" sm="6" md="4">
+                      <v-col cols="16" sm="6" md="7">
                         <v-text-field
-                          v-model="editedItem.name"
-                          label="Dessert name"
+                          outlined
+                          dense
+                          v-model="editedItem.prod_name"
+                          label="Product name"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="16" sm="6" md="5">
+                        <v-autocomplete
+                          v-model="editedItem.category"
+                          :items="categoryName"
+                          class="mx-4"
+                          flat
+                          dense
+                          outlined
+                          hide-no-data
+                          hide-details
+                          label="Choose category"
+                          solo-inverted
+                          @click="showCate"
+                        ></v-autocomplete>
+                      </v-col>
+                      <v-col cols="16" sm="6" md="12">
+                        <v-text-field
+                          outlined
+                          dense
+                          v-model="editedItem.detail"
+                          label="Product Details"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="16" sm="6" md="4">
                         <v-text-field
-                          v-model="editedItem.calories"
-                          label="Calories"
+                          outlined
+                          dense
+                          v-model="editedItem.price"
+                          label="Price (baht)"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="16" sm="6" md="4">
+                      <v-col cols="16" sm="6" md="8">
                         <v-text-field
-                          v-model="editedItem.fat"
-                          label="Fat (g)"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="16" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedItem.carbs"
-                          label="Carbs (g)"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="16" sm="6" md="4">
-                        <v-text-field
+                          outlined
+                          dense
                           v-model="editedItem.qrcode"
-                          label="qrcode (g)"
+                          label="QR Code"
                         ></v-text-field>
                       </v-col>
+                      <v-row>
+                        <v-col md="3">
+                          <v-btn @click="click1">choose a photo</v-btn>
+                          <input
+                            type="file"
+                            ref="input1"
+                            style="display: none"
+                            @change="previewImage"
+                            accept="image/*"
+                          />
+                        </v-col>
+                        <v-col md="4">
+                          <img
+                            class="preview"
+                            height="250"
+                            width="300"
+                            :src="editedItem.image"
+                          />
+                        </v-col>
+                      </v-row>
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -133,63 +242,69 @@
   </v-container>
 </template>
 <script>
+import { db } from "../firebaseDb";
+import firebase from "firebase";
 export default {
   data: () => ({
+    // img1: null,
     dialog: false,
+    dialogCate: false,
     dialogDelete: false,
     headers: [
-      { text: "Product Image", value: "image" },
-      { text: "Product ID", value: "prod_id" },
+      { text: "Product Image", value: "image", sortable: false },
+      { text: "Product ID", value: "prod_id", sortable: false },
       {
         text: "Product Name",
         align: "start",
-        sortable: false,
-        value: "name",
+        value: "prod_name",
       },
-      { text: "Category", value: "calories" },
-      { text: "Detail", value: "fat" },
-      { text: "Price", value: "carbs" },
-      { text: "Qr Code", value: "qrcode" },
+      { text: "Category", value: "category" },
+      { text: "Detail", value: "detail" },
+      { text: "Price", value: "price" },
+      { text: "Qr Code", value: "qrcode", sortable: false },
+      { text: "Actions", value: "actions", sortable: false },
+    ],
+    cheaders: [
+      { text: "Category ID", value: "cate_id", sortable: false },
+      { text: "Category Name", value: "cate_name", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
     ],
     desserts: [],
+    categories: [],
+    categoryName: [],
+    category: {
+      cate_id: null,
+      cate_name: "",
+    },
     editedIndex: -1,
     editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      qrcode: 0,
+      prod_name: "",
+      category: "",
+      detail: "",
+      price: 0,
+      qrcode: "",
+      image: "",
     },
     defaultItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      qrcode: 0,
+      prod_name: "",
+      category: "",
+      detail: "",
+      price: 0,
+      qrcode: "",
+      image: "",
     },
     loading: false,
     items: [],
     search: null,
     select: null,
-    states: [
-      "Alabama",
-      "Alaska",
-      "American Samoa",
-      "Arizona",
-      "Arkansas",
-      "California",
-      "Colorado",
-      "Connecticut",
-      "Delaware",
-      "District of Columbia",
-      "Frozen Yogurt",
-    ],
+    states: ["Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas"],
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1
+        ? "New Product"
+        : "Edit Product Information";
     },
   },
 
@@ -197,7 +312,13 @@ export default {
     dialog(val) {
       val || this.close();
     },
+    dialogCate(val) {
+      val || this.close();
+    },
     dialogDelete(val) {
+      val || this.closeDelete();
+    },
+    dialogDeleteCate(val) {
       val || this.closeDelete();
     },
     search(val) {
@@ -210,72 +331,40 @@ export default {
   },
 
   methods: {
+    showCate() {
+      console.log(this.categories);
+    },
     initialize() {
-      this.desserts = [
-        {
-          image: "https://kemps.com/wp-content/uploads/2017/10/RS2157_FroYo-FF_NSA_Vanilla_010617-scr-800x553.jpg",
-          prod_id: "P001",
-          name: "Frozen Yogurt",
-          calories: "Snack",
-          fat: 6.0,
-          carbs: 24,
-          qrcode: "",
-        },
-        {
-          image: "https://assets.epicurious.com/photos/60ad380c0e303494c8490c18/4:3/w_3884,h_2913,c_limit/IceCreamSandwich_HERO_RECIPE_052021_16458.jpg",
-          prod_id: "P002",
-          name: "Ice cream sandwich",
-          calories: "Snack",
-          fat: 9.0,
-          carbs: 37,
-          qrcode: "",
-        },
-        {
-          image: "https://www.seriouseats.com/thmb/lc2yYRB99hofO3_AUt6VfLLsQnk=/1500x1125/filters:fill(auto,1)/__opt__aboutcom__coeus__resources__content_migration__serious_eats__seriouseats.com__2020__12__20201210-choux-eclairs-vicky-wasik-16-acf615b81c2f4217857bbf80d60c28c1.jpg",
-          prod_id: "P003",
-          name: "Eclair",
-          calories: "Snack",
-          fat: 16.0,
-          carbs: 23,
-          qrcode: "",
-        },
-        {
-          image: "https://hips.hearstapps.com/delish/assets/18/07/1518475314-vanilla-cupcake-horizontal-.jpg",
-          prod_id: "P004",
-          name: "Cupcake",
-          calories: "Snack",
-          fat: 3.7,
-          carbs: 67,
-          qrcode: "",
-        },
-        {
-          image: "https://www.onceuponachef.com/images/2016/12/Gingerbread-Men-2-1200x871.jpg",
-          prod_id: "P005",
-          name: "Gingerbread",
-          calories: "Snack",
-          fat: 16.0,
-          carbs: 49,
-          qrcode: "",
-        },
-        {
-          image: "https://cf.shopee.co.th/file/3d4fe01073bf715f19f0cf0e62617974",
-          prod_id: "P006",
-          name: "Jelly bean",
-          calories: "Snack",
-          fat: 0.0,
-          carbs: 94,
-          qrcode: "",
-        },
-        {
-          image: "https://cdn.webshopapp.com/shops/263312/files/322169664/1500x4000x3/jolly-rancher-lollipop-1-piece-assorted.jpg",
-          prod_id: "P007",
-          name: "Lollipop",
-          calories: "Snack",
-          fat: 0.2,
-          carbs: 98,
-          qrcode: "",
-        },
-      ];
+      db.collection("product").onSnapshot((snapshotChange) => {
+        this.desserts = [];
+        snapshotChange.forEach((doc) => {
+          this.desserts.push({
+            prod_id: doc.id,
+            prod_name: doc.data().prod_name,
+            category: doc.data().category,
+            detail: doc.data().detail,
+            price: doc.data().price,
+            qrcode: doc.data().qrcode,
+            image: doc.data().image,
+          });
+        });
+      });
+      db.collection("category").onSnapshot((snapshotChange) => {
+        this.categories = [];
+        snapshotChange.forEach((item) => {
+          this.categories.push({
+            id: item.id,
+            cate_id: item.data().cate_id,
+            cate_name: item.data().cate_name,
+          });
+        });
+      });
+      db.collection("category").onSnapshot((snapshotChange) => {
+        this.categoryName = [];
+        snapshotChange.forEach((item) => {
+          this.categoryName.push(item.data().cate_name);
+        });
+      });
     },
 
     editItem(item) {
@@ -283,20 +372,46 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
-
     deleteItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
+    // deleteCate(item) {
+    //   this.categories = Object.assign({}, item);
+    //   this.dialogDeleteCate = true;
+    // },
 
     deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
+      // this.desserts.splice(this.editedIndex, 1);
+      db.collection("product")
+        .doc(this.editedItem.prod_id)
+        .delete()
+        .then(() => {
+          alert("Product deleted!");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      this.closeDelete();
+    },
+
+    deleteCate(item) {
+      db.collection("category")
+        .doc(item.id)
+        .delete()
+        .then(() => {
+          alert("Category deleted!");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       this.closeDelete();
     },
 
     close() {
       this.dialog = false;
+      this.dialogCate = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
@@ -311,15 +426,84 @@ export default {
       });
     },
 
+    addCate() {
+      db.collection("category")
+        .add(this.category)
+        .then(() => {
+          this.category.id = "";
+          this.category.cate_name = "";
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+        console.log(this.editedItem)
+        db.collection("product")
+          .doc(this.editedItem.prod_id)
+          .update(this.editedItem)
+          .then(() => {
+            alert("Product successfully updated!");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
-        this.desserts.push(this.editedItem);
+        // this.editedItem
+        db.collection("product")
+          .add(this.editedItem)
+          .then(() => {
+            alert("Product successfully added!");
+            this.editedItem.prod_name = "";
+            this.editedItem.category = "";
+            this.editedItem.detail = "";
+            this.editedItem.price = "";
+            this.editedItem.qrcode = "";
+            this.editedItem.image = "";
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
       this.close();
     },
 
+    click1() {
+      this.$refs.input1.click();
+    },
+
+    previewImage(event) {
+      this.uploadValue = 0;
+      this.editedItem.image = null;
+      this.imageData = event.target.files[0];
+      this.onUpload();
+    },
+
+    onUpload() {
+      this.editedItem.image = null;
+      const storageRef = firebase
+        .storage()
+        .ref(`${this.imageData.name}`)
+        .put(this.imageData);
+      storageRef.on(
+        `state_changed`,
+        (snapshot) => {
+          this.uploadValue =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        },
+        (error) => {
+          console.log(error.message);
+        },
+        () => {
+          this.uploadValue = 100;
+          storageRef.snapshot.ref.getDownloadURL().then((url) => {
+            this.editedItem.image = url;
+          });
+        }
+      );
+    },
     querySelections(v) {
       this.loading = true;
       // Simulated ajax query
