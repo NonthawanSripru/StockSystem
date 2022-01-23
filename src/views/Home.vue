@@ -55,6 +55,7 @@ import productMenu from "@/components/productMenu.vue";
 import reportMenu from "@/components/reportMenu.vue";
 import stockMenu from "@/components/stockMenu.vue";
 import orderMenu from "@/components/orderMenu.vue";
+import supplierMenu from "@/components/supplierMenu.vue";
 
 export default {
   components: {
@@ -62,7 +63,8 @@ export default {
     productMenu,
     reportMenu,
     stockMenu,
-    orderMenu
+    orderMenu,
+    supplierMenu
   },
   data() {
     return {
@@ -87,6 +89,11 @@ export default {
           title: "Orders",
           icon: "mdi-cart-variant",
           route: { name: "home", params: { page: "orderMenu" } },
+        },
+        {
+          title: "Suppliers",
+          icon: "mdi-archive-star",
+          route: { name: "home", params: { page: "supplierMenu" } },
         },
         {
           title: "Reports",

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h2 class="text-left mb-5">Products</h2>
+    <!-- <h2 class="text-left mb-5">Products</h2> -->
     <v-card class="mb-5">
       <v-toolbar dark color="teal">
         <v-toolbar-title>Search Product</v-toolbar-title>
@@ -36,6 +36,10 @@
 
         <template v-slot:item.detail="{ item }">
           <p class="mt-3" style="width: 150px">{{ item.detail }}</p>
+        </template>
+        <template v-slot:item.qrcode="{ item }">
+          <qr-code :text="item.prod_name" :size="100"></qr-code>
+          <!-- <qr-code :text="JSON.stringify(item.prod_name)" :size="100"></qr-code> -->
         </template>
 
         <template v-slot:top>
@@ -80,7 +84,11 @@
                         ></v-text-field>
                       </v-col>
                       <v-col cols="16" sm="6" md="1">
-                        <v-icon class="mt-5" color="blue darken-1" @click="addCate">
+                        <v-icon
+                          class="mt-5"
+                          color="blue darken-1"
+                          @click="addCate"
+                        >
                           mdi-plus-circle
                         </v-icon>
                       </v-col>
@@ -168,14 +176,14 @@
                           label="Price (baht)"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="16" sm="6" md="8">
+                      <!-- <v-col cols="16" sm="6" md="8">
                         <v-text-field
                           outlined
                           dense
                           v-model="editedItem.qrcode"
                           label="QR Code"
                         ></v-text-field>
-                      </v-col>
+                      </v-col> -->
                       <v-row>
                         <v-col md="3">
                           <v-btn @click="click1">choose a photo</v-btn>
@@ -187,7 +195,7 @@
                             accept="image/*"
                           />
                         </v-col>
-                        <v-col md="4">
+                        <v-col md="6">
                           <img
                             class="preview"
                             height="250"
@@ -244,7 +252,11 @@
 <script>
 import { db } from "../firebaseDb";
 import firebase from "firebase";
+
 export default {
+  // components:{
+  //   QrcodeVue,
+  // },
   data: () => ({
     // img1: null,
     dialog: false,
@@ -252,7 +264,7 @@ export default {
     dialogDelete: false,
     headers: [
       { text: "Product Image", value: "image", sortable: false },
-      { text: "Product ID", value: "prod_id", sortable: false },
+      // { text: "Product ID", value: "prod_id", sortable: false },
       {
         text: "Product Name",
         align: "start",
@@ -272,6 +284,7 @@ export default {
     desserts: [],
     categories: [],
     categoryName: [],
+    Qrcode: [],
     category: {
       cate_id: null,
       cate_name: "",
@@ -346,6 +359,10 @@ export default {
             price: doc.data().price,
             qrcode: doc.data().qrcode,
             image: doc.data().image,
+          });
+          this.Qrcode.push({
+            prod_id: doc.id,
+            prod_name: doc.data().prod_name,
           });
         });
       });
@@ -440,7 +457,7 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        console.log(this.editedItem)
+        console.log(this.editedItem);
         db.collection("product")
           .doc(this.editedItem.prod_id)
           .update(this.editedItem)
@@ -460,8 +477,8 @@ export default {
             this.editedItem.category = "";
             this.editedItem.detail = "";
             this.editedItem.price = "";
-            this.editedItem.qrcode = "";
             this.editedItem.image = "";
+            this.editedItem.qrcode = JSON.stringify(this.editedItem);
           })
           .catch((error) => {
             console.log(error);
