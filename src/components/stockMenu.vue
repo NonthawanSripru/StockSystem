@@ -44,7 +44,7 @@
       </v-card-title>
       <v-data-table
         :headers="headers"
-        :items="desserts"
+        :items="stock"
         :search="search"
         class="mr-5 ml-5"
       ></v-data-table>
@@ -52,6 +52,8 @@
   </v-container>
 </template>
 <script>
+import { db } from "../firebaseDb";
+
 export default {
   data() {
     return {
@@ -75,91 +77,32 @@ export default {
         { text: "Status", value: "status" },
         { text: "Amount", value: "amount" },
         { text: "Remaining", value: "remain" },
-        { text: "Employee ID", value: "emp_id" },
+        { text: "Employee", value: "emp_id" },
       ],
-      desserts: [
-        {
-          name: "Frozen Yogurt",
-          prod_id: 159,
-          prod_name: 6.0,
-          status: 24,
-          amount: 4.0,
-          remain: "1%",
-        },
-        {
-          name: "Ice cream sandwich",
-          prod_id: 237,
-          prod_name: 9.0,
-          status: 37,
-          amount: 4.3,
-          remain: "1%",
-        },
-        {
-          name: "Eclair",
-          prod_id: 262,
-          prod_name: 16.0,
-          status: 23,
-          amount: 6.0,
-          remain: "7%",
-        },
-        {
-          name: "Cupcake",
-          prod_id: 305,
-          prod_name: 3.7,
-          status: 67,
-          amount: 4.3,
-          remain: "8%",
-        },
-        {
-          name: "Gingerbread",
-          prod_id: 356,
-          prod_name: 16.0,
-          status: 49,
-          amount: 3.9,
-          remain: "16%",
-        },
-        {
-          name: "Jelly bean",
-          prod_id: 375,
-          prod_name: 0.0,
-          status: 94,
-          amount: 0.0,
-          remain: "0%",
-        },
-        {
-          name: "Lollipop",
-          prod_id: 392,
-          prod_name: 0.2,
-          status: 98,
-          amount: 0,
-          remain: "2%",
-        },
-        {
-          name: "Honeycomb",
-          prod_id: 408,
-          prod_name: 3.2,
-          status: 87,
-          amount: 6.5,
-          remain: "45%",
-        },
-        {
-          name: "Donut",
-          prod_id: 452,
-          prod_name: 25.0,
-          status: 51,
-          amount: 4.9,
-          remain: "22%",
-        },
-        {
-          name: "KitKat",
-          prod_id: 518,
-          prod_name: 26.0,
-          status: 65,
-          amount: 7,
-          remain: "6%",
-        },
-      ],
+      stock: [],
     };
   },
+  methods:{
+    init(){
+      db.collection("stock").onSnapshot((snapshotChange) => {
+        this.stock = [];
+        snapshotChange.forEach((doc) => {
+          this.stock.push({
+            sid: doc.id,
+            prod_id: doc.data().prod_id,
+            prod_name: doc.data().prod_name,
+            status: doc.data().status,
+            amount: doc.data().amount,
+            remain: doc.data().remaining,
+            date: doc.data().date,
+            emp_id: doc.data().employee,
+          });
+        });
+      });
+    }
+  },
+  created(){
+    this.init();
+  }
 };
 </script>

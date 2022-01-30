@@ -15,16 +15,24 @@
       class="mt-5"
       dense
       :headers="headers"
-      :items="desserts"
+      :items="suppliedList"
       :search="search"
-    ></v-data-table>
+    >
+      <template v-slot:item.prod_name="{ item }">
+        <!-- <v-row v-for="(xitem, index) in item" :key="index"> -->
+          <p class="mt-3" style="width: 100px">{{ item.prod_name }}</p>
+        <!-- </v-row> -->
+      </template>
+    </v-data-table>
   </v-container>
 </template>
 <script>
-import formSup from "./formAddSup.vue"
+import formSup from "./formAddSup.vue";
+import { db } from "../firebaseDb";
+
 export default {
-  components:{
-    formSup
+  components: {
+    formSup,
   },
   data() {
     return {
@@ -42,89 +50,30 @@ export default {
         { text: "Date", value: "date" },
         // { text: "Employee", value: "employee" },
       ],
-      desserts: [
-        {
-          sup_name: "Mead Johnson Thailand",
-          prod_name: "Frozen Yogurt",
-          price: 720,
-          amount: 24,
-          date: "20/01/2022",
-          employee: "1%",
-        },
-        {
-          sup_name: "Pacific Intertrade",
-          prod_name: "Ice cream sandwich",
-          price: 740,
-          amount: 37,
-          date: "20/01/2022",
-          employee: "1%",
-        },
-        {
-          sup_name: "Pacific Intertrade",
-          prod_name: "Eclair",
-          price: 368,
-          amount: 23,
-          date: "20/01/2022",
-          employee: "7%",
-        },
-        {
-          sup_name: "Pacific Intertrade",
-          prod_name: "Cupcake",
-          price: 1675,
-          amount: 67,
-          date: "20/01/2022",
-          employee: "8%",
-        },
-        {
-          sup_name: "Pacific Intertrade",
-          prod_name: "Gingerbread",
-          price: 784,
-          amount: 49,
-          date: "21/01/2022",
-          employee: "16%",
-        },
-        {
-          sup_name: "Mead Johnson Thailand",
-          prod_name: "Jelly bean",
-          price: 940,
-          amount: 94,
-          date: "21/01/2022",
-          employee: "0%",
-        },
-        {
-          sup_name: "Mead Johnson Thailand",
-          prod_name: "Lollipop",
-          price: 196,
-          amount: 98,
-          date: "21/01/2022",
-          employee: "2%",
-        },
-        {
-          sup_name: "Pacific Intertrade",
-          prod_name: "Honeycomb",
-          price: 870,
-          amount: 87,
-          date: "21/01/2022",
-          employee: "45%",
-        },
-        {
-          sup_name: "Mead Johnson Thailand",
-          prod_name: "Donut",
-          price: 765,
-          amount: 51,
-          date: "21/01/2022",
-          employee: "22%",
-        },
-        {
-          sup_name: "Mead Johnson Thailand",
-          prod_name: "KitKat",
-          price: 1300,
-          amount: 65,
-          date: "21/01/2022",
-          employee: "6%",
-        },
-      ],
+      suppliedList: [],
     };
+  },
+  created() {
+    this.init();
+  },
+  methods: {
+    async init() {
+      db.collection("suppliedList").onSnapshot((snapshotChange) => {
+        this.suppliedList = [];
+        snapshotChange.forEach((doc) => {
+          this.suppliedList.push({
+            sup_id: doc.id,
+            sup_name: doc.data().sup_name,
+            prod_name: doc.data().prod_name,
+            price: doc.data().price,
+            amount: doc.data().amount,
+            date: doc.data().date,
+            employee: doc.data().employee,
+          });
+        });
+      });
+      // console.log(this.suppliedList)
+    },
   },
 };
 </script>
