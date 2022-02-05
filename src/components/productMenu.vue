@@ -173,17 +173,17 @@
                           outlined
                           dense
                           v-model="editedItem.price"
-                          label="Price (baht)"
+                          label="Unit Price (baht)"
                         ></v-text-field>
                       </v-col>
-                      <!-- <v-col cols="16" sm="6" md="8">
+                      <v-col cols="16" sm="6" md="8">
                         <v-text-field
                           outlined
                           dense
-                          v-model="editedItem.qrcode"
-                          label="QR Code"
+                          v-model="editedItem.remain"
+                          label="Qualtity"
                         ></v-text-field>
-                      </v-col> -->
+                      </v-col>
                       <v-row>
                         <v-col md="3">
                           <v-btn @click="click1">choose a photo</v-btn>
@@ -273,6 +273,7 @@ export default {
       { text: "Category", value: "category" },
       { text: "Detail", value: "detail" },
       { text: "Price", value: "price" },
+      { text: "Remain", value: "remain" },
       { text: "Qr Code", value: "qrcode", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
     ],
@@ -295,7 +296,7 @@ export default {
       category: "",
       detail: "",
       price: 0,
-      qrcode: "",
+      remain: 0,
       image: "",
     },
     defaultItem: {
@@ -303,7 +304,7 @@ export default {
       category: "",
       detail: "",
       price: 0,
-      qrcode: "",
+      remain: 0,
       image: "",
     },
     loading: false,
@@ -359,6 +360,7 @@ export default {
             price: doc.data().price,
             qrcode: doc.data().qrcode,
             image: doc.data().image,
+            remain: doc.data().remain,
           });
           this.Qrcode.push({
             prod_id: doc.id,

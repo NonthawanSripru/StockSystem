@@ -14,7 +14,7 @@
               ></v-img>
             </v-list-item-avatar>
 
-            <v-list-item-title>John Leider</v-list-item-title>
+            <v-list-item-title>{{email}}</v-list-item-title>
 
             <v-btn icon @click.stop="mini = !mini">
               <v-icon>mdi-chevron-left</v-icon>
@@ -56,6 +56,7 @@ import reportMenu from "@/components/reportMenu.vue";
 import stockMenu from "@/components/stockMenu.vue";
 import orderMenu from "@/components/orderMenu.vue";
 import supplierMenu from "@/components/supplierMenu.vue";
+import firebase from "firebase";
 
 export default {
   components: {
@@ -64,10 +65,12 @@ export default {
     reportMenu,
     stockMenu,
     orderMenu,
-    supplierMenu
+    supplierMenu,
   },
   data() {
     return {
+      isLogedIn:"",
+      email:"",
       drawer: true,
       items: [
         {
@@ -103,6 +106,25 @@ export default {
       ],
       mini: true,
     };
+  },
+  created(){
+    this.checkLogin()
+  },
+  methods: {
+    checkLogin() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // User is signed in.
+          this.email = user.email;
+          this.isLogedIn = true;
+          // console.log(user)
+        } else {
+          // No user is signed in.
+          // this.$router.replace("/");
+          this.isLogedIn = false;
+        }
+      });
+    },
   },
   computed: {
     xcomponents() {
