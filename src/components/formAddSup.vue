@@ -13,6 +13,11 @@
             ></v-select>
           </v-col>
         </v-row>
+        <v-row>
+          <v-btn @click="AddProduct"
+            ><v-icon>mdi-plus</v-icon>Add product</v-btn
+          >
+        </v-row>
         <v-row v-for="(item, index) in supplied" :key="index">
           <v-col md="7">
             <v-select
@@ -32,10 +37,7 @@
               dense
             ></v-text-field>
           </v-col>
-          <v-col md="1" v-if="index === 0">
-            <v-btn icon @click="AddProduct"><v-icon>mdi-plus</v-icon></v-btn>
-          </v-col>
-          <v-col md="1" v-if="index !== 0">
+          <v-col md="1">
             <v-btn icon @click="RemoveProduct(item)"
               ><v-icon>mdi-minus</v-icon></v-btn
             >
@@ -122,12 +124,11 @@ export default {
       obj["sup_name"] = this.select;
       obj["prod_name"] = this.supplied;
 
-
-       db.collection("suppliedList")
+      db.collection("suppliedList")
         .add(obj)
         .then(() => {
-            alert("Supply successful!");
-          })
+          alert("Supply successful!");
+        });
       // console.log("date : "+ today.toLocaleDateString())
       // console.log("user : "+ this.email)
       // console.log(this.select)
@@ -135,6 +136,10 @@ export default {
     },
     AddProduct() {
       this.supplied.push(this.suppliedList);
+      this.suppliedList = {
+        product: "",
+        amount: "",
+      };
     },
     RemoveProduct(item) {
       this.supplied.splice(this.supplied.indexOf(item), 1);

@@ -9,9 +9,10 @@
         >
           <v-list-item class="px-2">
             <v-list-item-avatar>
-              <v-img
+              <!-- <v-img
                 src="https://randomuser.me/api/portraits/men/85.jpg"
-              ></v-img>
+              ></v-img> -->
+              <v-icon color="primary">mdi-account</v-icon>
             </v-list-item-avatar>
 
             <v-list-item-title>{{email}}</v-list-item-title>

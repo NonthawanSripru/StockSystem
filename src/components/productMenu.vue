@@ -4,25 +4,23 @@
     <v-card class="mb-5">
       <v-toolbar dark color="teal">
         <v-toolbar-title>Search Product</v-toolbar-title>
-        <v-autocomplete
-          v-model="select"
-          :loading="loading"
-          :items="items"
-          :search-input.sync="search"
-          cache-items
-          class="mx-4"
-          flat
-          hide-no-data
+        <v-text-field
+          class="ml-5"
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Type information for search..."
+          single-line
           hide-details
-          label="Type product name ...."
-          solo-inverted
-        ></v-autocomplete>
+          outlined
+          dense
+        ></v-text-field>
       </v-toolbar>
     </v-card>
     <v-card class="mb-5">
       <v-data-table
         :headers="headers"
         :items="desserts"
+        :search="search"
         sort-by="category"
         class="elevation-1"
       >
@@ -44,7 +42,7 @@
 
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title>My Products</v-toolbar-title>
+            <v-toolbar-title>Product Lists</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
 
@@ -310,8 +308,8 @@ export default {
     loading: false,
     items: [],
     search: null,
-    select: null,
-    states: ["Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas"],
+    // select: null,
+    // states: ["Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas"],
   }),
 
   computed: {

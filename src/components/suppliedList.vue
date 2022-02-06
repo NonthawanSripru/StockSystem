@@ -3,27 +3,62 @@
     <v-card>
       <formSup />
     </v-card>
-    <v-text-field
+    <!-- <v-text-field
       v-model="search"
       append-icon="mdi-magnify"
       label="Search"
       single-line
       hide-details
       dense
-    ></v-text-field>
-    <v-data-table
+    ></v-text-field> -->
+    <!-- <v-data-table
       class="mt-5"
       dense
       :headers="headers"
       :items="suppliedList"
       :search="search"
     >
-      <template v-slot:item.prod_name="{ item }">
-        <!-- <v-row v-for="(xitem, index) in item" :key="index"> -->
-          <p class="mt-3" style="width: 100px">{{ item.prod_name }}</p>
-        <!-- </v-row> -->
+      <template v-slot:item.prod_name= item >
+        <v-row v-for="(xitem, index) in item[0]" :key="index">
+          <p class="mt-3" style="width: 100px">{{ xitem.product }}</p>
+        </v-row>
       </template>
-    </v-data-table>
+    </v-data-table> -->
+
+    <v-simple-table height="300px">
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th class="text-left">Supplier Name</th>
+            <th class="text-left">Product Name</th>
+            <th class="text-left">Amount</th>
+            <th class="text-left">Date</th>
+            <th class="text-left">Employee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in suppliedList" :key="item.sup_id">
+            <td>{{ item.sup_name }}</td>
+            <td>
+              <tr v-for="(xitem, index) in item.prod_name" :key="index">
+                <p>
+                  {{ xitem.product }}
+                </p>
+              </tr>
+            </td>
+            <td>
+              <tr v-for="(xitem, index) in item.prod_name" :key="index">
+                <p>
+                  {{ xitem.amount }}
+                </p>
+              </tr>
+            </td>
+            <td>{{ item.date }}</td>
+            <td>{{ item.employee }}</td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
   </v-container>
 </template>
 <script>

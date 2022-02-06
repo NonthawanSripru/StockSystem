@@ -3,7 +3,7 @@
     <v-btn class="mb-5" color="primary" @click="dialogNewSup = true"
       >Add new supplier</v-btn
     >
-    <v-dialog v-model="dialogNewSup">
+    <v-dialog v-model="dialogNewSup" width="900">
       <v-card >
         <v-card-title>Add New Supplier</v-card-title>
         <v-col>
