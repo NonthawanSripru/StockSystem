@@ -71,7 +71,7 @@ export default {
           sortable: false,
           value: "sid",
         },
-        { text: "Product ID", value: "prod_id" },
+        // { text: "Product ID", value: "prod_id" },
         { text: "Product Name", value: "prod_name" },
         { text: "Date", value: "date" },
         { text: "Status", value: "status" },

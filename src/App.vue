@@ -10,13 +10,41 @@
 
           <v-spacer></v-spacer>
 
-          <!-- <v-btn icon>
-            <v-icon>mdi-magnify</v-icon>
+          <!-- <v-btn v-if="isLogedIn" icon @click="showNoti">
+            <v-badge
+              :content="messages"
+              :value="messages"
+              color="error"
+              overlap
+            >
+              <v-icon>mdi-bell</v-icon>
+            </v-badge>
           </v-btn> -->
-          <v-btn v-if="isLogedIn" icon>
-            <v-icon>mdi-bell</v-icon>
-          </v-btn>
-          <h3 v-if="isLogedIn"> Hi! {{email}}</h3>
+
+          <v-menu v-if="isLogedIn">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-badge
+                  :content="products.length"
+                  :value="products.length"
+                  color="error"
+                  overlap
+                >
+                  <v-icon>mdi-bell</v-icon>
+                </v-badge>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item v-for="(item, i) in products" :key="i">
+                <v-list-item-content @click="MarkAsRead(item)"
+                  >{{ item.prod_name }} is almost out of
+                  stock</v-list-item-content
+                >
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
+          <h3 v-if="isLogedIn">Hi! {{ email }}</h3>
           <v-btn v-if="isLogedIn" icon @click="logout()">
             <v-icon>mdi-logout</v-icon>
           </v-btn>
@@ -27,15 +55,40 @@
   </v-app>
 </template>
 <script>
+import { db } from "./firebaseDb";
 import firebase from "firebase";
+
 export default {
   data: () => ({
     // drawer: false,
+    products: [],
     group: null,
-    email:"",
+    email: "",
     isLogedIn: "",
+    messages: 0,
   }),
   methods: {
+    getRemain() {
+      db.collection("product").onSnapshot((snapshotChange) => {
+        this.products = [];
+        snapshotChange.forEach((doc) => {
+          if(doc.data().remain==doc.data().notify)
+          this.products.push({
+            // prod_id: doc.id,
+            prod_name: doc.data().prod_name,
+            // image: doc.data().image,
+            remain: doc.data().remain,
+            notify: doc.data().notify,
+          });
+        });
+      });
+    },
+    getNotification() {
+      this.messages = this.products.length;
+    },
+    MarkAsRead(val) {
+      console.log(val);
+    },
     logout() {
       firebase
         .auth()
@@ -44,24 +97,31 @@ export default {
           this.$router.replace("/");
         });
     },
+    showNoti() {
+      alert("Show Notification");
+    },
     checkLogin() {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           // User is signed in.
-          this.email=user.email;
-          this.isLogedIn=true;
+          this.email = user.email;
+          this.isLogedIn = true;
           // console.log(user)
         } else {
           // No user is signed in.
           // this.$router.replace("/");
-          this.isLogedIn=false;
+          this.isLogedIn = false;
         }
       });
     },
   },
-  created(){
-      this.checkLogin();
-  }
+  created() {
+    this.checkLogin();
+    this.getNotification();
+  },
+  mounted() {
+    this.getRemain();
+  },
 };
 </script>
 <style lang="scss">

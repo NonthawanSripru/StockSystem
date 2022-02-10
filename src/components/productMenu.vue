@@ -174,12 +174,21 @@
                           label="Unit Price (baht)"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="16" sm="6" md="8">
+                      <v-col cols="16" sm="6" md="4">
                         <v-text-field
                           outlined
                           dense
                           v-model="editedItem.remain"
                           label="Qualtity"
+                          disabled
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="16" sm="6" md="4">
+                        <v-text-field
+                          outlined
+                          dense
+                          v-model="editedItem.notify"
+                          label="Amount to be notified"
                         ></v-text-field>
                       </v-col>
                       <v-row>
@@ -270,7 +279,7 @@ export default {
       },
       { text: "Category", value: "category" },
       { text: "Detail", value: "detail" },
-      { text: "Price", value: "price" },
+      { text: "Unit price (Baht)", value: "price" },
       { text: "Remain", value: "remain" },
       { text: "Qr Code", value: "qrcode", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
@@ -295,16 +304,17 @@ export default {
       detail: "",
       price: 0,
       remain: 0,
+      notify:0,
       image: "",
     },
-    defaultItem: {
-      prod_name: "",
-      category: "",
-      detail: "",
-      price: 0,
-      remain: 0,
-      image: "",
-    },
+    // defaultItem: {
+    //   prod_name: "",
+    //   category: "",
+    //   detail: "",
+    //   price: 0,
+    //   remain: 0,
+    //   image: "",
+    // },
     loading: false,
     items: [],
     search: null,
@@ -356,7 +366,8 @@ export default {
             category: doc.data().category,
             detail: doc.data().detail,
             price: doc.data().price,
-            qrcode: doc.data().qrcode,
+            // qrcode: doc.data().qrcode,
+            notify: doc.data().notify,
             image: doc.data().image,
             remain: doc.data().remain,
           });
@@ -430,7 +441,6 @@ export default {
       this.dialog = false;
       this.dialogCate = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
     },
@@ -438,7 +448,6 @@ export default {
     closeDelete() {
       this.dialogDelete = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
     },
@@ -453,6 +462,10 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+
+    checkStock(){
+
     },
 
     save() {
@@ -478,7 +491,7 @@ export default {
             this.editedItem.detail = "";
             this.editedItem.price = "";
             this.editedItem.image = "";
-            this.editedItem.qrcode = JSON.stringify(this.editedItem);
+            // this.editedItem.qrcode = JSON.stringify(this.editedItem);
           })
           .catch((error) => {
             console.log(error);
