@@ -40,6 +40,7 @@
                   placeholder="Amount"
                   id="amount"
                   value=""
+                  class="mr-12"
                 />
                 <input
                   type="number"
@@ -392,15 +393,15 @@ input[type="radio"] {
 }
 label.radio {
   position: relative;
-  display: inline-block;
+  display: inline-grid;
   margin-right: 20px;
-  text-indent: 32px;
+  text-indent: 25px;
   cursor: pointer;
 }
 label.radio:before {
   content: "";
   position: absolute;
-  top: -1px;
+  top: 4px;
   left: 0;
   width: 17px;
   height: 17px;
