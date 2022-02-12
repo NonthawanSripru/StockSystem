@@ -128,7 +128,12 @@ export default {
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then(() => {
-          this.$router.push("/home/homeMenu");
+          if(this.email=="test@gmail.com"){
+            this.$router.push("/home/homeMenu");
+          }else{
+            this.$router.push("/product");
+          }
+          
         })
         .catch((error) => {
           alert(error.message);

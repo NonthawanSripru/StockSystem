@@ -1,11 +1,11 @@
 <template>
-  <v-app v-if="$route.name == 'about'">
+  <!-- <v-app v-if="$route.name == 'about'">
     <router-view />
-  </v-app>
-  <v-app v-else>
+  </v-app> -->
+  <v-app>
     <div>
       <v-card class="mx-auto overflow-hidden" height="auto">
-        <v-app-bar color="#101357" dark>
+        <v-app-bar color="#101357" dark v-if="email=='test@gmail.com'">
           <v-toolbar-title><h2>Stock control & Inventory</h2></v-toolbar-title>
           <v-spacer></v-spacer>
           <v-menu v-if="isLogedIn">
@@ -30,6 +30,36 @@
               </v-list-item>
             </v-list>
           </v-menu>
+          <h3 v-if="isLogedIn">Hi! {{ email }}</h3>
+          <v-btn v-if="isLogedIn" icon @click="logout()">
+            <v-icon>mdi-logout</v-icon>
+          </v-btn>
+        </v-app-bar>
+        <v-app-bar color="#101357" dark v-else>
+          <v-toolbar-title><h2>Simple Store</h2></v-toolbar-title>
+          <v-spacer></v-spacer>
+          <!-- <v-menu v-if="isLogedIn">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-badge
+                  :content="products.length"
+                  :value="products.length"
+                  color="error"
+                  overlap
+                >
+                  <v-icon>mdi-bell</v-icon>
+                </v-badge>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item v-for="(item, i) in products" :key="i">
+                <v-list-item-content @click="MarkAsRead(item)"
+                  >{{ item.prod_name }} is almost out of
+                  stock</v-list-item-content
+                >
+              </v-list-item>
+            </v-list>
+          </v-menu> -->
           <h3 v-if="isLogedIn">Hi! {{ email }}</h3>
           <v-btn v-if="isLogedIn" icon @click="logout()">
             <v-icon>mdi-logout</v-icon>
