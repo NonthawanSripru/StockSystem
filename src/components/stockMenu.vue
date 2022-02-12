@@ -3,8 +3,8 @@
     <v-row class="mx-2">
     <h2 class="text-left mb-5">Product Stock</h2>
     <v-spacer/>
-    <v-btn class="mr-2" color="primary">Add Stock</v-btn>
-    <v-btn color="error">Remove Stock</v-btn>
+    <v-btn class="mr-2" color="primary" to="/ScanQR-Product">Add Stock</v-btn>
+    <v-btn color="error" to="/ScanQR-Product">Remove Stock</v-btn>
     </v-row>
     <v-card class="mb-5 mt-3">
       <v-container>
@@ -74,10 +74,10 @@ export default {
         // { text: "Product ID", value: "prod_id" },
         { text: "Product Name", value: "prod_name" },
         { text: "Date", value: "date" },
-        { text: "Status", value: "status" },
         { text: "Amount", value: "amount" },
         { text: "Remaining", value: "remain" },
         { text: "Employee", value: "emp_id" },
+        { text: "Status", value: "status" },
       ],
       stock: [],
     };

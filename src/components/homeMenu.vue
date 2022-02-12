@@ -24,10 +24,15 @@
       </v-row>
     </v-card>
     <v-card>
-      <v-data-table :headers="headers" :items="desserts" class="elevation-1">
-        <template v-slot:item.calories="{ item }">
-          <v-chip :color="getColor(item.calories)" dark>
-            {{ item.calories }}
+      <v-data-table :headers="headers" :items="stock" class="elevation-1">
+        <!-- <template v-slot:item.remain="{ item }">
+          <v-chip :color="getColor(item.remain)" dark>
+            {{ item.remain }}
+          </v-chip>
+        </template> -->
+        <template v-slot:item.status="{ item }">
+          <v-chip :color="getStatusColor(item.status)" dark>
+            {{ item.status }}
           </v-chip>
         </template>
       </v-data-table>
@@ -35,123 +40,57 @@
   </v-container>
 </template>
 <script>
+import { db } from "../firebaseDb";
 export default {
   data() {
     return {
       headers: [
-        { text: "SID", value: "iron" },
-        { text: "Product ID", value: "fat" },
         {
-          text: "Product Name",
+          text: "Stock ID",
           align: "start",
           sortable: false,
-          value: "name",
+          value: "sid",
         },
-        { text: "Stock", value: "carbs" },
+        // { text: "Product ID", value: "prod_id" },
+        { text: "Product Name", value: "prod_name" },
+        { text: "Date", value: "date" },
+        { text: "Status", value: "status" },
         { text: "Amount", value: "amount" },
-        { text: "Employee Name", value: "protein" },
-        { text: "Status", value: "calories" },
+        { text: "Remaining", value: "remain" },
+        // { text: "Employee", value: "emp_id" },
       ],
-      desserts: [
-        {
-          name: "Frozen Yogurt",
-          calories: "ready for sale",
-          fat: "P001",
-          carbs: "In",
-          amount: 100,
-          protein: "John Leider",
-          iron: "1",
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: "ready for sale",
-          fat: "P002",
-          carbs: "Out",
-          amount: 80,
-          protein: "John Leider",
-          iron: "2",
-        },
-        {
-          name: "Eclair",
-          calories: "ready for sale",
-          fat: "P003",
-          carbs: "In",
-          amount: 100,
-          protein: "Somsak S.",
-          iron: "3",
-        },
-        {
-          name: "Cupcake",
-          calories: "out of stock",
-          fat: "P004",
-          carbs: "In",
-          amount: 100,
-          protein: "Saengdao S.",
-          iron: "4",
-        },
-        {
-          name: "Gingerbread",
-          calories: "out of stock",
-          fat: "P005",
-          carbs: "Out",
-          amount: 70,
-          protein: "Somsak S.",
-          iron: "5",
-        },
-        {
-          name: "Jelly bean",
-          calories: "ready for sale",
-          fat: "P007",
-          carbs: "Out",
-          amount: 32,
-          protein: "John Leider",
-          iron: "6",
-        },
-        {
-          name: "Lollipop",
-          calories: "ready for sale",
-          fat: "P008",
-          carbs: "In",
-          amount: 50,
-          protein: "Somsak S.",
-          iron: "7",
-        },
-        {
-          name: "Honeycomb",
-          calories: "out of stock",
-          fat: "P006",
-          carbs:"Out",
-          amount: 12,
-          protein: "Emma W.",
-          iron: "8",
-        },
-        {
-          name: "Donut",
-          calories: "ready for sale",
-          fat: "P009",
-          carbs: "In",
-          amount: 100,
-          protein: "John Leider",
-          iron: "9",
-        },
-        {
-          name: "KitKat",
-          calories: "out of stock",
-          fat: "P010",
-          carbs: "Out",
-          amount: 43,
-          protein: "John W.",
-          iron: "10",
-        },
-      ],
+      stock: [],
     };
   },
-  methods: {
-    getColor(calories) {
-      if (calories === "out of stock") return "red";
-      else if (calories > 200) return "orange";
+  methods:{
+    getColor(val) {
+      if (val == 0) return "red";
       else return "green";
     },
+    getStatusColor(val) {
+      if (val == "out") return "red";
+      else return "green";
+    },
+    init(){
+      db.collection("stock").onSnapshot((snapshotChange) => {
+        this.stock = [];
+        snapshotChange.forEach((doc) => {
+          this.stock.push({
+            sid: doc.id,
+            prod_id: doc.data().prod_id,
+            prod_name: doc.data().prod_name,
+            status: doc.data().status,
+            amount: doc.data().amount,
+            remain: doc.data().remaining,
+            date: doc.data().date,
+            emp_id: doc.data().employee,
+          });
+        });
+      });
+    }
   },
+  created(){
+    this.init();
+  }
 };
 </script>

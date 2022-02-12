@@ -14,7 +14,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-btn @click="AddProduct"
+          <v-btn @click="AddProduct" class="ml-3"
             ><v-icon>mdi-plus</v-icon>Add product</v-btn
           >
         </v-row>

@@ -1,0 +1,74 @@
+<template>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center">
+        <h4 class="pt-3">Our Products</h4>
+      </div>
+    </div>
+    <div class="row">
+      <div
+        v-for="product in products"
+        :key="product.prod_id"
+        class="mx-8 mb-5"
+      >
+        <ProductBox :product="product"> </ProductBox>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { db } from "../firebaseDb";
+import ProductBox from "../components/ProductBox";
+export default {
+  name: "Product",
+  components: { ProductBox },
+  //   props : [ "baseURL" , "products" ],
+  data() {
+    return {
+      products: [],
+    };
+  },
+  created() {
+    this.initialize();
+  },
+  methods: {
+    initialize() {
+      db.collection("product").onSnapshot((snapshotChange) => {
+        this.products = [];
+        snapshotChange.forEach((doc) => {
+          this.products.push({
+            prod_id: doc.id,
+            prod_name: doc.data().prod_name,
+            category: doc.data().category,
+            detail: doc.data().detail,
+            price: doc.data().price,
+            // qrcode: doc.data().qrcode,
+            notify: doc.data().notify,
+            image: doc.data().image,
+            remain: doc.data().remain,
+          });
+        });
+      });
+    },
+  },
+  //   mounted(){
+  //     if (this.$route.name=='AdminProduct' && !localStorage.getItem('token')) {
+  //       this.$router.push({name : 'Signin'});
+  //     }
+  //   }
+};
+</script>
+
+<style scoped>
+h4 {
+  font-family: "Roboto", sans-serif;
+  color: #484848;
+  font-weight: 700;
+}
+
+#add-product {
+  float: right;
+  font-weight: 500;
+}
+</style>

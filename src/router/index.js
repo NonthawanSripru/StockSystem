@@ -14,6 +14,21 @@ const routes = [
     name: 'about',
     component: () => import('../views/About.vue')
   },
+  {
+    path: '/product',
+    name: 'product',
+    component: () => import('../views/Product.vue')
+  },
+  {
+    path: '/ShowDetails',
+    name: 'ShowDetails',
+    component: () => import('../views/ShowDetails.vue')
+  },
+  {
+    path: '/ScanQR-Product',
+    name: 'ScanQr',
+    component: () => import('../views/ScanQr.vue')
+  },
   // {
   //   path: '/',
   //   name: 'Home',

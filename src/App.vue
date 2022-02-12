@@ -1,26 +1,13 @@
 <template>
-  <v-app>
+  <v-app v-if="$route.name == 'about'">
+    <router-view />
+  </v-app>
+  <v-app v-else>
     <div>
       <v-card class="mx-auto overflow-hidden" height="auto">
         <v-app-bar color="#101357" dark>
-          <!-- <v-app-bar color="deep-purple" dark> -->
-          <!-- <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon> -->
-
           <v-toolbar-title><h2>Stock control & Inventory</h2></v-toolbar-title>
-
           <v-spacer></v-spacer>
-
-          <!-- <v-btn v-if="isLogedIn" icon @click="showNoti">
-            <v-badge
-              :content="messages"
-              :value="messages"
-              color="error"
-              overlap
-            >
-              <v-icon>mdi-bell</v-icon>
-            </v-badge>
-          </v-btn> -->
-
           <v-menu v-if="isLogedIn">
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon v-bind="attrs" v-on="on">
@@ -43,7 +30,6 @@
               </v-list-item>
             </v-list>
           </v-menu>
-
           <h3 v-if="isLogedIn">Hi! {{ email }}</h3>
           <v-btn v-if="isLogedIn" icon @click="logout()">
             <v-icon>mdi-logout</v-icon>
@@ -72,14 +58,14 @@ export default {
       db.collection("product").onSnapshot((snapshotChange) => {
         this.products = [];
         snapshotChange.forEach((doc) => {
-          if(doc.data().remain==doc.data().notify)
-          this.products.push({
-            // prod_id: doc.id,
-            prod_name: doc.data().prod_name,
-            // image: doc.data().image,
-            remain: doc.data().remain,
-            notify: doc.data().notify,
-          });
+          if (doc.data().remain == doc.data().notify)
+            this.products.push({
+              // prod_id: doc.id,
+              prod_name: doc.data().prod_name,
+              // image: doc.data().image,
+              remain: doc.data().remain,
+              notify: doc.data().notify,
+            });
         });
       });
     },
