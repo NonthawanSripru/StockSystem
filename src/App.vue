@@ -8,7 +8,7 @@
         <v-app-bar color="#101357" dark v-if="email=='test@gmail.com'">
           <v-toolbar-title><h2>Stock control & Inventory</h2></v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-menu v-if="isLogedIn">
+          <v-menu v-if="isLogedIn" offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon v-bind="attrs" v-on="on">
                 <v-badge
@@ -21,12 +21,14 @@
                 </v-badge>
               </v-btn>
             </template>
-            <v-list>
-              <v-list-item v-for="(item, i) in products" :key="i">
-                <v-list-item-content @click="MarkAsRead(item)"
-                  >{{ item.prod_name }} is almost out of
-                  stock</v-list-item-content
-                >
+            <v-list class="mt-2">
+              <v-subheader><h3>NOTIFICATIONS</h3></v-subheader>
+              <v-divider></v-divider>
+              <v-list-item v-for="(item, i) in products" :key="i" link>
+                <v-list-item-content @click="MarkAsRead(item)">
+                  <h4>{{ item.prod_name }}</h4> is almost out of stock
+                </v-list-item-content>
+                <v-subheader>Remain: {{ item.remain }}</v-subheader>
               </v-list-item>
             </v-list>
           </v-menu>
