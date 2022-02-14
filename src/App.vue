@@ -5,7 +5,7 @@
   <v-app>
     <div>
       <v-card class="mx-auto overflow-hidden" height="auto">
-        <v-app-bar color="#101357" dark v-if="email=='test@gmail.com'">
+        <v-app-bar color="#101357" dark v-if="email == 'test@gmail.com'">
           <v-toolbar-title><h2>Stock control & Inventory</h2></v-toolbar-title>
           <v-spacer></v-spacer>
           <v-menu v-if="isLogedIn" offset-y>
@@ -26,7 +26,8 @@
               <v-divider></v-divider>
               <v-list-item v-for="(item, i) in products" :key="i" link>
                 <v-list-item-content @click="MarkAsRead(item)">
-                  <h4>{{ item.prod_name }}</h4> is almost out of stock
+                  <h4>{{ item.prod_name }}</h4>
+                  is almost out of stock
                 </v-list-item-content>
                 <v-subheader>Remain: {{ item.remain }}</v-subheader>
               </v-list-item>
@@ -40,28 +41,31 @@
         <v-app-bar color="#101357" dark v-else>
           <v-toolbar-title><h2>Simple Store</h2></v-toolbar-title>
           <v-spacer></v-spacer>
-          <!-- <v-menu v-if="isLogedIn">
+          <v-menu v-if="isLogedIn" offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon v-bind="attrs" v-on="on">
                 <v-badge
-                  :content="products.length"
-                  :value="products.length"
+                  :content="cart.length"
+                  :value="cart.length"
                   color="error"
                   overlap
                 >
-                  <v-icon>mdi-bell</v-icon>
+                  <v-icon>mdi-cart</v-icon>
                 </v-badge>
               </v-btn>
             </template>
-            <v-list>
-              <v-list-item v-for="(item, i) in products" :key="i">
-                <v-list-item-content @click="MarkAsRead(item)"
-                  >{{ item.prod_name }} is almost out of
-                  stock</v-list-item-content
-                >
+            <v-list width="300px">
+              <v-subheader><h3>My carts</h3></v-subheader>
+              <v-divider></v-divider>
+              <v-list-item v-for="(item, i) in cart" :key="i" class="ml-5">
+                <v-list-item-content @click="MarkAsRead(item)">
+                  {{ item.order.product }}
+                  <v-spacer/>
+                  x{{ item.order.amount }}
+                </v-list-item-content>
               </v-list-item>
             </v-list>
-          </v-menu> -->
+          </v-menu>
           <h3 v-if="isLogedIn">Hi! {{ email }}</h3>
           <v-btn v-if="isLogedIn" icon @click="logout()">
             <v-icon>mdi-logout</v-icon>
@@ -80,6 +84,7 @@ export default {
   data: () => ({
     // drawer: false,
     products: [],
+    cart: [],
     group: null,
     email: "",
     isLogedIn: "",
@@ -98,6 +103,18 @@ export default {
               remain: doc.data().remain,
               notify: doc.data().notify,
             });
+        });
+      });
+    },
+    getCart() {
+      db.collection("cart").onSnapshot((snapshotChange) => {
+        this.cart = [];
+        snapshotChange.forEach((doc) => {
+          // if (doc.data().remain == doc.data().notify)
+          this.cart.push({
+            // prod_id: doc.id,
+            order: doc.data().order,
+          });
         });
       });
     },
@@ -139,6 +156,7 @@ export default {
   },
   mounted() {
     this.getRemain();
+    this.getCart();
   },
 };
 </script>
