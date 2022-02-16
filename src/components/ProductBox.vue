@@ -12,25 +12,29 @@
       </div>
       <div class="card-body">
         <!-- <router-link :to="{ name: 'ShowDetails', params: { id: product.id } }"> -->
-        <h5 class="card-title">{{ product.prod_name }}</h5>
+        <h5 class="card-title ml-1">{{ product.prod_name }}</h5>
         <!-- </router-link> -->
-        <p class="card-text">Price : {{ product.price }} Baht</p>
-        <p class="card-text">Stock : {{ product.remain }}</p>
-        <p class="card-text font-italic">
+        <v-row class="mt-1 mr-1 ml-1">
+          <p class="card-text">Price : {{ product.price }} Baht</p>
+          <v-spacer/>
+          <p class="card-text">Stock : {{ product.remain }}</p>
+        </v-row>
+        <p class="card-text font-italic ml-1">
           {{ product.detail.substring(0, 65) }}...
         </p>
         <!-- </div> -->
       </div>
       <div>
-        <v-row>
+        <v-row class="ml-1">
           <v-col>
-            <v-btn v-if="qualtity<=0" disabled> - </v-btn>
+            <v-btn v-if="qualtity <= 0" disabled> - </v-btn>
             <v-btn @click="qualtity-- && product.remain++" v-else> - </v-btn>
           </v-col>
-          <v-col class="center"><p>{{ qualtity }}</p></v-col>
+          <v-col><p class="mt-2 ml-6">{{ qualtity }}</p></v-col>
           <v-col>
-            <v-btn v-if="product.remain==0" disabled> + </v-btn>
-            <v-btn v-else @click="product.remain-- && qualtity++"> + </v-btn></v-col>
+            <v-btn v-if="product.remain == 0" disabled> + </v-btn>
+            <v-btn v-else @click="product.remain-- && qualtity++"> + </v-btn>
+          </v-col >
         </v-row>
       </div>
       <div class="mt-3">
@@ -46,7 +50,7 @@ import firebase from "firebase";
 
 export default {
   name: "ProductBox",
-  props: ["product","id"],
+  props: ["product", "id"],
   data() {
     return {
       carts: [],
@@ -57,6 +61,7 @@ export default {
         price: "",
         amount: "",
         total: "",
+        prod_id:"",
       },
       user: null,
     };
@@ -70,14 +75,15 @@ export default {
       this.item.product = this.product.prod_name;
       this.item.price = this.product.price;
       this.item.amount = this.qualtity;
-      this.item.total = this.qualtity*this.product.price;
+      this.item.total = this.qualtity * this.product.price;
+      this.item.prod_id = this.id;
 
       var obj = {};
       // obj["date"] = today.toLocaleDateString();
       // obj["employee"] = this.email;
       obj["order"] = this.item;
       // obj["totalPrice"] = this.totalPrice;
-      console.log(obj)
+      console.log(obj);
 
       db.collection("user")
         .doc(this.user.uid)
@@ -87,11 +93,11 @@ export default {
           alert("Add cart successfully!");
         });
 
-      db.collection('product').doc(this.id).update({
-          remain: this.product.remain,
-        });
-      
-      this.qualtity=0;
+      db.collection("product").doc(this.id).update({
+        remain: this.product.remain,
+      });
+
+      this.qualtity = 0;
     },
     checkLogin() {
       firebase.auth().onAuthStateChanged((user) => {

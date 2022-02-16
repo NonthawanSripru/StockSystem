@@ -64,11 +64,13 @@
                   x{{ item.order.amount }} <v-spacer />
                   {{ item.order.total }} Baht
                 </v-list-item-content>
-                <v-btn>remove</v-btn>
+                <v-btn @click="removeProduct(item)">remove</v-btn>
               </v-list-item>
               <v-divider></v-divider>
               <v-list-item-action>
-                <v-btn class="mt-2" color="primary" @click="orderProduct">Order</v-btn>
+                <v-btn class="mt-2" color="primary" @click="orderProduct"
+                  >Order</v-btn
+                >
               </v-list-item-action>
             </v-list>
           </v-menu>
@@ -96,6 +98,7 @@ export default {
     isLogedIn: "",
     cuser: "",
     messages: 0,
+    remain: 0,
   }),
   methods: {
     getRemain() {
@@ -114,8 +117,6 @@ export default {
       });
     },
     getCart() {
-      // console.log(this.cuser)
-
       db.collection("user")
         .doc(this.cuser)
         .collection("cart")
@@ -124,14 +125,82 @@ export default {
           snapshotChange.forEach((doc) => {
             // if (doc.data().remain == doc.data().notify)
             this.cart.push({
-              // prod_id: doc.id,
+              id: doc.id,
               order: doc.data().order,
             });
           });
         });
     },
+    async removeProduct(val) {
+      const productRef = db.collection("product");
+      const snapshot = await productRef
+        .where("prod_name", "==", val.order.product)
+        .get();
+      if (snapshot.empty) {
+        console.log("No matching documents.");
+        return;
+      }
+      snapshot.forEach((doc) => {
+        this.remain = doc.data().remain;
+      });
+
+      var amount = val.order.amount;
+
+      // console.log(this.remain);
+      // console.log(amount)
+
+      db.collection("user")
+        .doc(this.cuser)
+        .collection("cart")
+        .doc(val.id)
+        .delete()
+        .then(() => {
+          alert("Product deleted!");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+      db.collection("product")
+        .doc(val.order.prod_id)
+        .update({
+          remain: this.remain + amount,
+        });
+    },
     orderProduct() {
-      console.log(this.cart);
+      var today = new Date();
+      var order = [];
+      var totalPrice = 0;
+
+      for (var i = 0; i < this.cart.length; i++) {
+        order.push(this.cart[i].order);
+        totalPrice = totalPrice + this.cart[i].order.total;
+      }
+
+      var obj = {};
+      obj["date"] = today.toLocaleDateString();
+      obj["employee"] = this.email;
+      obj["order"] = order;
+      obj["totalPrice"] = totalPrice;
+      // console.log(obj);
+
+      db.collection("order")
+        .add(obj)
+        .then(() => {
+          alert("Add order successfully!");
+        });
+
+      let collref = db
+        .collection("user")
+        .doc(this.cuser)
+        .collection("cart");
+
+      collref.get().then(async (querySnap) => {
+        await querySnap.forEach(async (doc) => {
+          await collref.doc(doc.id).delete();
+        });
+      });
+
     },
     getNotification() {
       this.messages = this.products.length;
