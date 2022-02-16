@@ -11,7 +11,7 @@
         :key="product.prod_id"
         class="mx-8 mb-5"
       >
-        <ProductBox :product="product"> </ProductBox>
+        <ProductBox :product="product" :id="product.prod_id"> </ProductBox>
       </div>
     </div>
   </div>

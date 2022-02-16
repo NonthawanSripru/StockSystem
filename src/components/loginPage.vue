@@ -105,7 +105,7 @@
 <script>
 import firebase from "firebase";
 import "firebase/auth";
-// import { db } from "../firebaseDb";
+import { db } from "../firebaseDb";
 
 export default {
   data: function () {
@@ -168,6 +168,10 @@ export default {
           .then(() => {
             this.dialogSignup=false;
           });
+        db.collection('user').doc(res.user.uid).set({
+          name: this.user.name,
+          status: "customer"
+        });
       })
       .catch((error) => {
          alert(error.message);

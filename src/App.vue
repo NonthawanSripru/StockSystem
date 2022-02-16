@@ -60,10 +60,16 @@
               <v-list-item v-for="(item, i) in cart" :key="i" class="ml-5">
                 <v-list-item-content @click="MarkAsRead(item)">
                   {{ item.order.product }}
-                  <v-spacer/>
-                  x{{ item.order.amount }}
+                  <v-spacer />
+                  x{{ item.order.amount }} <v-spacer />
+                  {{ item.order.total }} Baht
                 </v-list-item-content>
+                <v-btn>remove</v-btn>
               </v-list-item>
+              <v-divider></v-divider>
+              <v-list-item-action>
+                <v-btn class="mt-2" color="primary" @click="orderProduct">Order</v-btn>
+              </v-list-item-action>
             </v-list>
           </v-menu>
           <h3 v-if="isLogedIn">Hi! {{ email }}</h3>
@@ -88,6 +94,7 @@ export default {
     group: null,
     email: "",
     isLogedIn: "",
+    cuser: "",
     messages: 0,
   }),
   methods: {
@@ -107,16 +114,24 @@ export default {
       });
     },
     getCart() {
-      db.collection("cart").onSnapshot((snapshotChange) => {
-        this.cart = [];
-        snapshotChange.forEach((doc) => {
-          // if (doc.data().remain == doc.data().notify)
-          this.cart.push({
-            // prod_id: doc.id,
-            order: doc.data().order,
+      // console.log(this.cuser)
+
+      db.collection("user")
+        .doc(this.cuser)
+        .collection("cart")
+        .onSnapshot((snapshotChange) => {
+          this.cart = [];
+          snapshotChange.forEach((doc) => {
+            // if (doc.data().remain == doc.data().notify)
+            this.cart.push({
+              // prod_id: doc.id,
+              order: doc.data().order,
+            });
           });
         });
-      });
+    },
+    orderProduct() {
+      console.log(this.cart);
     },
     getNotification() {
       this.messages = this.products.length;
@@ -139,9 +154,10 @@ export default {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           // User is signed in.
+          this.cuser = user.uid;
           this.email = user.email;
           this.isLogedIn = true;
-          // console.log(user)
+          this.getCart();
         } else {
           // No user is signed in.
           // this.$router.replace("/");
@@ -156,7 +172,6 @@ export default {
   },
   mounted() {
     this.getRemain();
-    this.getCart();
   },
 };
 </script>

@@ -15,12 +15,25 @@
         <h5 class="card-title">{{ product.prod_name }}</h5>
         <!-- </router-link> -->
         <p class="card-text">Price : {{ product.price }} Baht</p>
+        <p class="card-text">Stock : {{ product.remain }}</p>
         <p class="card-text font-italic">
           {{ product.detail.substring(0, 65) }}...
         </p>
         <!-- </div> -->
       </div>
       <div>
+        <v-row>
+          <v-col>
+            <v-btn v-if="qualtity<=0" disabled> - </v-btn>
+            <v-btn @click="qualtity-- && product.remain++" v-else> - </v-btn>
+          </v-col>
+          <v-col class="center"><p>{{ qualtity }}</p></v-col>
+          <v-col>
+            <v-btn v-if="product.remain==0" disabled> + </v-btn>
+            <v-btn v-else @click="product.remain-- && qualtity++"> + </v-btn></v-col>
+        </v-row>
+      </div>
+      <div class="mt-3">
         <v-btn @click="addCart">Add Cart</v-btn>
       </div>
     </v-container>
@@ -33,45 +46,58 @@ import firebase from "firebase";
 
 export default {
   name: "ProductBox",
-  props: ["product"],
+  props: ["product","id"],
   data() {
     return {
       carts: [],
       email: "",
+      qualtity: 0,
       item: {
         product: "",
         price: "",
         amount: "",
         total: "",
       },
+      user: null,
     };
   },
-  created(){
+  created() {
     this.checkLogin();
   },
   methods: {
     addCart() {
-      var today = new Date();
+      // var today = new Date();
       this.item.product = this.product.prod_name;
       this.item.price = this.product.price;
-      this.item.amount = 1;
+      this.item.amount = this.qualtity;
+      this.item.total = this.qualtity*this.product.price;
 
       var obj = {};
-      obj["date"] = today.toLocaleDateString();
-      obj["employee"] = this.email;
+      // obj["date"] = today.toLocaleDateString();
+      // obj["employee"] = this.email;
       obj["order"] = this.item;
       // obj["totalPrice"] = this.totalPrice;
+      console.log(obj)
 
-      db.collection("cart")
+      db.collection("user")
+        .doc(this.user.uid)
+        .collection("cart")
         .add(obj)
         .then(() => {
           alert("Add cart successfully!");
         });
+
+      db.collection('product').doc(this.id).update({
+          remain: this.product.remain,
+        });
+      
+      this.qualtity=0;
     },
     checkLogin() {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           // User is signed in.
+          this.user = user;
           this.email = user.email;
           this.isLogedIn = true;
           // console.log(user)
