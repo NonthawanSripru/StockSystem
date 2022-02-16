@@ -79,10 +79,7 @@ export default {
       this.item.prod_id = this.id;
 
       var obj = {};
-      // obj["date"] = today.toLocaleDateString();
-      // obj["employee"] = this.email;
       obj["order"] = this.item;
-      // obj["totalPrice"] = this.totalPrice;
       console.log(obj);
 
       db.collection("user")

@@ -55,7 +55,7 @@ import homeMenu from "@/components/homeMenu.vue";
 import productMenu from "@/components/productMenu.vue";
 import reportMenu from "@/components/reportMenu.vue";
 import stockMenu from "@/components/stockMenu.vue";
-import orderMenu from "@/components/xorderMenu.vue";
+import orderMenu from "@/components/orderMenu.vue";
 import supplierMenu from "@/components/supplierMenu.vue";
 import firebase from "firebase";
 

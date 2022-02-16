@@ -5,7 +5,7 @@
         <span class="table-title"><b>Scan product for stock</b></span>
         <br />
         <span class="table-desc"
-          >User: <span class="vue-font">admin@mail.com</span>
+          >User: <span class="vue-font">{{email}}</span>
         </span>
       </tr>
     </table>
@@ -117,6 +117,7 @@
 <script>
 import { QrcodeStream } from "vue-qrcode-reader";
 import { db } from "../firebaseDb";
+import firebase from "firebase";
 
 export default {
   name: "app",
@@ -143,13 +144,17 @@ export default {
         price: "",
         remain: "",
         image: "",
-        notify:""
+        notify: "",
       },
+      email: "",
+      isLogedIn: "",
+      cuser: "",
     };
   },
   components: { QrcodeStream },
   created() {
     this.init();
+    this.checkLogin();
   },
   methods: {
     init() {
@@ -229,7 +234,7 @@ export default {
         (obj["amount"] = document.getElementById("amount").value),
         (obj["remaining"] = this.remain),
         (obj["date"] = new Date().toJSON().slice(0, 10).replace(/-/g, "/")),
-        (obj["employee"] = "admin"));
+        (obj["employee"] = this.email));
       // console.log(obj);
 
       this.product.remain = this.remain;
@@ -268,6 +273,21 @@ export default {
       this.remain =
         parseInt(this.productStock) -
         parseInt(document.getElementById("amount").value);
+    },
+
+    checkLogin() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // User is signed in.
+          this.cuser = user.uid;
+          this.email = user.email;
+          this.isLogedIn = true;
+        } else {
+          // No user is signed in.
+          // this.$router.replace("/");
+          this.isLogedIn = false;
+        }
+      });
     },
 
     async onInit(promise) {
