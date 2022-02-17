@@ -1,59 +1,38 @@
 <template>
   <v-container>
     <v-row class="mx-2">
-      <h2 class="text-left">Order Lists</h2>
+      <h2 class="text-left">Customer's Order</h2>
       <v-spacer />
-      <v-btn class="mr-2" color="primary" @click="dialogOrder = true"
+      <!-- <v-btn class="mr-2" color="primary" @click="dialogOrder = true"
         >Add Order</v-btn
-      >
+      > -->
     </v-row>
     <v-row>
-      <v-col md="6">
-        <v-card class="mb-5 mt-3">
-          <v-container>
-            <v-menu
-              v-model="menu2"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              offset-y
-              min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="date"
-                  label="Select date for search information"
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="date"
-                @input="menu2 = false"
-              ></v-date-picker>
-            </v-menu>
-          </v-container>
-        </v-card>
-      </v-col>
-      <v-col md="6">
+      <v-col md="12">
         <v-card class="mb-5 mt-3 pb-5">
-          <v-container>
-            <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
-          </v-container>
+          <!-- <v-container> -->
+          <v-row>
+            <v-col md="3">
+              <h3 class="text-left ml-5 mt-4">Input date for search:</h3>
+            </v-col>
+            <v-col md="8">
+              <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                label="Search"
+                single-line
+                hide-details
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <!-- </v-container> -->
         </v-card>
       </v-col>
     </v-row>
 
     <v-dialog v-model="dialogOrder" max-width="800px">
       <v-card>
-        <v-card-title>Add Order Informaion</v-card-title>
+        <v-card-title>Add Order Information</v-card-title>
         <v-col>
           <v-row v-for="(item, index) in ordered" :key="index" class="mx-2">
             <v-col md="4">
@@ -113,7 +92,6 @@
     <v-card>
       <v-card-title>
         Orders List
-        <v-spacer></v-spacer>
       </v-card-title>
       <v-data-table
         :headers="headers"

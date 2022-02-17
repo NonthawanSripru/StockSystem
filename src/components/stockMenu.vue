@@ -1,15 +1,16 @@
 <template>
   <v-container>
     <v-row class="mx-2">
-    <h2 class="text-left mb-5">Product Stock</h2>
-    <v-spacer/>
-    <v-btn class="mr-2" color="primary" to="/ScanQR-Product">Add Stock</v-btn>
-    <v-btn color="error" to="/ScanQR-Product">Remove Stock</v-btn>
+      <h2 class="text-left mb-5">Product Stock</h2>
+      <v-spacer />
+      <v-btn class="mr-2" color="primary" to="/ScanQR-Product"
+        >Scan QR for add-remove stock</v-btn
+      >
     </v-row>
     <v-card class="mb-5 mt-3">
       <v-container>
         <v-menu
-          v-model="menu2"
+          v-model="datePick"
           :close-on-content-click="false"
           :nudge-right="40"
           transition="scale-transition"
@@ -26,7 +27,7 @@
               v-on="on"
             ></v-text-field>
           </template>
-          <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
+          <v-date-picker v-model="date" @input="datePick = false"></v-date-picker>
         </v-menu>
       </v-container>
     </v-card>
@@ -47,7 +48,13 @@
         :items="stock"
         :search="search"
         class="mr-5 ml-5"
-      ></v-data-table>
+      >
+        <template v-slot:item.status="{ item }">
+          <v-chip :color="getStatusColor(item.status)" dark>
+            {{ item.status }}
+          </v-chip>
+        </template>
+      </v-data-table>
     </v-card>
   </v-container>
 </template>
@@ -82,8 +89,8 @@ export default {
       stock: [],
     };
   },
-  methods:{
-    init(){
+  methods: {
+    init() {
       db.collection("stock").onSnapshot((snapshotChange) => {
         this.stock = [];
         snapshotChange.forEach((doc) => {
@@ -99,10 +106,14 @@ export default {
           });
         });
       });
-    }
+    },
+    getStatusColor(val) {
+      if (val == "out") return "red";
+      else return "green";
+    },
   },
-  created(){
+  created() {
     this.init();
-  }
+  },
 };
 </script>

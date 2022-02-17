@@ -110,7 +110,7 @@
                   <v-btn color="blue darken-1" text @click="close">
                     Cancel
                   </v-btn>
-                  <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
+                  <!-- <v-btn color="blue darken-1" text @click="save"> Save </v-btn> -->
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -181,6 +181,14 @@
                           v-model="editedItem.remain"
                           label="Qualtity"
                           disabled
+                          v-if="editedIndex > -1"
+                        ></v-text-field>
+                        <v-text-field
+                          outlined
+                          dense
+                          v-model="editedItem.remain"
+                          label="Qualtity"
+                          v-else
                         ></v-text-field>
                       </v-col>
                       <v-col cols="16" sm="6" md="4">
@@ -281,6 +289,7 @@ export default {
       { text: "Detail", value: "detail" },
       { text: "Unit price (Baht)", value: "price" },
       { text: "Remain", value: "remain" },
+      { text: "Notify", value: "notify" },
       { text: "Qr Code", value: "qrcode", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
     ],

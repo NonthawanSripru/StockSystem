@@ -6,19 +6,19 @@
         <v-col>
           <v-card class="flex-sm-wrap" color="success" dark>
             <h3 class="mx-3 pt-2 text-left">Stock In</h3>
-            <h1 class="mx-3 text-right">54</h1>
+            <h1 class="mx-3 text-right">{{stockIn}}</h1>
           </v-card>
         </v-col>
         <v-col>
           <v-card class="flex-sm-wrap" color="error" dark>
             <h3 class="mx-3 pt-2 text-left">Stock Out</h3>
-            <h1 class="mx-3 text-right">173</h1>
+            <h1 class="mx-3 text-right">{{stockOut}}</h1>
           </v-card>
         </v-col>
         <v-col>
           <v-card class="flex-sm-wrap" color="warning" dark>
             <h3 class="mx-3 pt-2 text-left">Total Order</h3>
-            <h1 class="mx-3 text-right">67</h1>
+            <h1 class="mx-3 text-right">{{order}}</h1>
           </v-card>
         </v-col>
       </v-row>
@@ -60,6 +60,9 @@ export default {
         // { text: "Employee", value: "emp_id" },
       ],
       stock: [],
+      stockIn:0,
+      stockOut:0,
+      order:0
     };
   },
   methods:{
@@ -72,7 +75,7 @@ export default {
       else return "green";
     },
     init(){
-      db.collection("stock").onSnapshot((snapshotChange) => {
+      db.collection("stock").where('date',"==",new Date().toJSON().slice(0, 10).replace(/-/g, "/")).onSnapshot((snapshotChange) => {
         this.stock = [];
         snapshotChange.forEach((doc) => {
           this.stock.push({
@@ -85,11 +88,27 @@ export default {
             date: doc.data().date,
             emp_id: doc.data().employee,
           });
+          if(doc.data().status=="in"){
+            this.stockIn= this.stockIn + 1
+          }else{
+            this.stockOut= this.stockOut + 1
+          }
         });
       });
+
+      var today = new Date();
+
+      db.collection("order").onSnapshot((snapshotChange) => {
+        snapshotChange.forEach((doc) => {
+          if(doc.data().date==today.toLocaleDateString()){
+            this.order= this.order + 1
+          }
+        });
+      });
+
     }
   },
-  created(){
+  mounted(){
     this.init();
   }
 };

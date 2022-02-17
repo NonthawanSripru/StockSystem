@@ -9,12 +9,13 @@
               :items="suppliers"
               label="Choose supplier"
               dense
+              outlined
               @change="getProduct"
             ></v-select>
           </v-col>
         </v-row>
         <v-row>
-          <v-btn @click="AddProduct" class="ml-3"
+          <v-btn @click="AddProduct" class="ml-3 mb-2"
             ><v-icon>mdi-plus</v-icon>Add product</v-btn
           >
         </v-row>

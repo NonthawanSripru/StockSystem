@@ -105,7 +105,7 @@ export default {
       db.collection("product").onSnapshot((snapshotChange) => {
         this.products = [];
         snapshotChange.forEach((doc) => {
-          if (doc.data().remain == doc.data().notify)
+          if (doc.data().remain <= doc.data().notify)
             this.products.push({
               // prod_id: doc.id,
               prod_name: doc.data().prod_name,
