@@ -2,15 +2,19 @@
   <div class="container">
     <div class="row">
       <div class="col-12 text-center">
-        <h1 class="pt-3">Products</h1>
+        <h1 class="pt-3 mb-3">Products</h1>
+        <v-combobox
+          class="mb-3"
+          v-model="search"
+          :items="select"
+          label="Choose product category"
+          outlined
+          @change="getProduct"
+        ></v-combobox>
       </div>
     </div>
     <div class="row">
-      <div
-        v-for="product in products"
-        :key="product.prod_id"
-        class="mx-8 mb-5"
-      >
+      <div v-for="product in products" :key="product.prod_id" class="mx-8 mb-5">
         <ProductBox :product="product" :id="product.prod_id"> </ProductBox>
       </div>
     </div>
@@ -27,6 +31,8 @@ export default {
   data() {
     return {
       products: [],
+      search: "",
+      select: [],
     };
   },
   created() {
@@ -50,6 +56,33 @@ export default {
           });
         });
       });
+
+      db.collection("category").onSnapshot((snapshotChange) => {
+        this.select = [];
+        snapshotChange.forEach((item) => {
+          this.select.push(item.data().cate_name);
+        });
+      });
+    },
+    getProduct() {
+      db.collection("product")
+        .where("category", "==", this.search)
+        .onSnapshot((snapshotChange) => {
+          this.products = [];
+          snapshotChange.forEach((doc) => {
+            this.products.push({
+              prod_id: doc.id,
+              prod_name: doc.data().prod_name,
+              category: doc.data().category,
+              detail: doc.data().detail,
+              price: doc.data().price,
+              // qrcode: doc.data().qrcode,
+              notify: doc.data().notify,
+              image: doc.data().image,
+              remain: doc.data().remain,
+            });
+          });
+        });
     },
   },
   //   mounted(){

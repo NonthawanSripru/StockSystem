@@ -15,7 +15,7 @@
             <v-col md="3">
               <h3 class="text-left ml-5 mt-4">Input date for search:</h3>
             </v-col>
-            <v-col md="8">
+            <v-col md="5">
               <v-text-field
                 v-model="search"
                 append-icon="mdi-magnify"

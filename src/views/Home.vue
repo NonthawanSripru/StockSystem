@@ -4,22 +4,18 @@
       <v-flex>
         <v-navigation-drawer
           v-model="drawer"
-          :mini-variant.sync="mini"
           permanent
         >
           <v-list-item class="px-2">
             <v-list-item-avatar>
-              <!-- <v-img
-                src="https://randomuser.me/api/portraits/men/85.jpg"
-              ></v-img> -->
               <v-icon color="primary">mdi-account</v-icon>
             </v-list-item-avatar>
 
             <v-list-item-title>{{email}}</v-list-item-title>
 
-            <v-btn icon @click.stop="mini = !mini">
+            <!-- <v-btn icon @click.stop="mini = !mini">
               <v-icon>mdi-chevron-left</v-icon>
-            </v-btn>
+            </v-btn> -->
           </v-list-item>
 
           <v-divider></v-divider>

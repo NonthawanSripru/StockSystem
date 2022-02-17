@@ -5,7 +5,7 @@
       <div class="embed-responsive embed-responsive-16by9">
         <img
           width="300"
-          height="200"
+          height="250"
           :src="product.image"
           alt="Product Image"
         />
