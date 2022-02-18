@@ -245,9 +245,9 @@ export default {
           alert("Stock successfully updated!");
           document.getElementById("prod_id").value = "";
           document.getElementById("prod_name").value = "";
-          document.getElementByTagName("status").value = "";
           document.getElementById("amount").value = "";
           document.getElementById("remaining").value = "";
+          document.getElementByTagName("status").value = "";
         })
         .catch((error) => {
           console.log(error);

@@ -75,7 +75,11 @@ export default {
       else return "green";
     },
     init(){
-      db.collection("stock").where('date',"==",new Date().toJSON().slice(0, 10).replace(/-/g, "/")).onSnapshot((snapshotChange) => {
+      var today = new Date();
+      var date = today.toJSON().slice(0, 10).replace(/-/g, "/")
+      console.log(date)
+
+      db.collection("stock").where('date',"==", date).onSnapshot((snapshotChange) => {
         this.stock = [];
         snapshotChange.forEach((doc) => {
           this.stock.push({
@@ -95,8 +99,6 @@ export default {
           }
         });
       });
-
-      var today = new Date();
 
       db.collection("order").onSnapshot((snapshotChange) => {
         snapshotChange.forEach((doc) => {

@@ -10,7 +10,7 @@
     <v-card class="mb-5 mt-3">
       <v-container>
         <v-menu
-          v-model="datePick"
+          v-model="menu2"
           :close-on-content-click="false"
           :nudge-right="40"
           transition="scale-transition"
@@ -27,7 +27,7 @@
               v-on="on"
             ></v-text-field>
           </template>
-          <v-date-picker v-model="date" @input="datePick = false"></v-date-picker>
+          <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
         </v-menu>
       </v-container>
     </v-card>

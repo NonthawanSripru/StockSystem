@@ -6,9 +6,9 @@
           v-model="drawer"
           permanent
         >
-          <v-list-item class="px-2">
+          <v-list-item class="tile">
             <v-list-item-avatar>
-              <v-icon color="primary">mdi-account</v-icon>
+              <v-icon large>mdi-account-circle-outline</v-icon>
             </v-list-item-avatar>
 
             <v-list-item-title>{{email}}</v-list-item-title>
@@ -131,3 +131,16 @@ export default {
   },
 };
 </script>
+<style scoped>
+  .tile {
+    margin: 5px;
+    border-radius: 4px;
+    background-color: rgb(250, 230, 174);
+  }
+  /* .tile:hover {
+    background: green;
+  }
+  .tile:active {
+    background: yellow;
+  } */
+</style>

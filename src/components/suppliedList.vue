@@ -1,31 +1,41 @@
 <template>
   <v-container>
-    <v-card>
+    <v-card flat>
       <formSup />
     </v-card>
-    <!-- <v-text-field
+    <v-text-field
+      class="mx-3"
       v-model="search"
       append-icon="mdi-magnify"
-      label="Search"
+      label="Search with supplier name or date"
       single-line
       hide-details
       dense
-    ></v-text-field> -->
-    <!-- <v-data-table
-      class="mt-5"
+    ></v-text-field>
+    <v-data-table
+      class="mt-7"
       dense
       :headers="headers"
       :items="suppliedList"
       :search="search"
     >
-      <template v-slot:item.prod_name= item >
-        <v-row v-for="(xitem, index) in item[0]" :key="index">
-          <p class="mt-3" style="width: 100px">{{ xitem.product }}</p>
-        </v-row>
+      <template v-slot:item.prod_name="{ item }">
+        <td>
+          <tr v-for="(xitem, index) in item.prod_name" :key="index">
+            <p>{{ xitem.product }}</p>
+          </tr>
+        </td>
       </template>
-    </v-data-table> -->
+      <template v-slot:item.amount="{ item }">
+        <td>
+          <tr v-for="(xitem, index) in item.prod_name" :key="index">
+            <p>{{ xitem.amount }}</p>
+          </tr>
+        </td>
+      </template>
+    </v-data-table>
 
-    <v-simple-table height="300px">
+    <!-- <v-simple-table height="300px">
       <template v-slot:default>
         <thead>
           <tr>
@@ -58,7 +68,7 @@
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
+    </v-simple-table> -->
   </v-container>
 </template>
 <script>
@@ -81,9 +91,8 @@ export default {
         { text: "Supplier Name", value: "sup_name" },
         { text: "Product Name", value: "prod_name" },
         { text: "Amount", value: "amount" },
-        { text: "Price", value: "price" },
         { text: "Date", value: "date" },
-        // { text: "Employee", value: "employee" },
+        { text: "Employee", value: "employee" },
       ],
       suppliedList: [],
     };

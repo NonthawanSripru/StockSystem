@@ -6,6 +6,7 @@
     <div>
       <v-card class="mx-auto overflow-hidden" height="auto">
         <v-app-bar color="#101357" dark v-if="email == 'test@gmail.com'">
+        <!-- <v-app-bar color="white" v-if="email == 'test@gmail.com'"> -->
           <v-toolbar-title><h2>Stock control & Inventory</h2></v-toolbar-title>
           <v-spacer></v-spacer>
           <v-menu v-if="isLogedIn" offset-y>
@@ -91,6 +92,7 @@ import firebase from "firebase";
 export default {
   data: () => ({
     // drawer: false,
+    userRole: null,
     products: [],
     cart: [],
     group: null,
@@ -99,6 +101,7 @@ export default {
     cuser: "",
     messages: 0,
     remain: 0,
+    role:""
   }),
   methods: {
     getRemain() {
@@ -190,17 +193,13 @@ export default {
           alert("Add order successfully!");
         });
 
-      let collref = db
-        .collection("user")
-        .doc(this.cuser)
-        .collection("cart");
+      let collref = db.collection("user").doc(this.cuser).collection("cart");
 
       collref.get().then(async (querySnap) => {
         await querySnap.forEach(async (doc) => {
           await collref.doc(doc.id).delete();
         });
       });
-
     },
     getNotification() {
       this.messages = this.products.length;
@@ -222,10 +221,25 @@ export default {
     checkLogin() {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-          // User is signed in.
           this.cuser = user.uid;
           this.email = user.email;
           this.isLogedIn = true;
+
+          this.userRole = new Promise((resolve) => {
+            db.collection("user").onSnapshot((snapshotChange) => {
+              snapshotChange.forEach((doc) => {
+                if (doc.id == this.cuser) resolve(doc.data().status);
+              });
+            });
+          });
+
+          this.role = this.userRole.then((values) => {
+            return values;
+          });
+
+          console.log(this.role);
+          // User is signed in.
+          // this.getRole();
           this.getCart();
         } else {
           // No user is signed in.
@@ -234,6 +248,15 @@ export default {
         }
       });
     },
+    // getRole() {
+    //   db.collection("user").onSnapshot((snapshotChange) => {
+    //     this.userRole = "";
+    //     snapshotChange.forEach((doc) => {
+    //       return this.userRole=doc.data().status;
+    //     });
+    //   });
+    //   console.log(this.userRole);
+    // },
   },
   created() {
     this.checkLogin();
@@ -241,6 +264,7 @@ export default {
   },
   mounted() {
     this.getRemain();
+    // this.getRole();
   },
 };
 </script>

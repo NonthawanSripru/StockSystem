@@ -1,10 +1,10 @@
 <template>
   <div>
     <iframe
-      title="supplied-analyse - Page 1"
-      width="600"
-      height="373.5"
-      src="https://app.powerbi.com/view?r=eyJrIjoiNmFjMWYwMjItNzM5ZS00MjFkLWFiZjktMDQ1MTczNjE4MzZjIiwidCI6ImU0OWRhNTdiLWI2MDItNDY2Ny1iMjU3LWYyMjgxOWUwZjA5MCIsImMiOjEwfQ%3D%3D"
+      title="stock-analyse"
+      width="1100"
+      height="600"
+      src="https://app.powerbi.com/view?r=eyJrIjoiNTVkYmMyZDYtNzM0Mi00NDc5LWFmYmItOTQ4MzJkNGU2OTMxIiwidCI6ImU0OWRhNTdiLWI2MDItNDY2Ny1iMjU3LWYyMjgxOWUwZjA5MCIsImMiOjEwfQ%3D%3D&pageName=ReportSection"
       frameborder="0"
       allowFullScreen="true"
     ></iframe>

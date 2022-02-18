@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="mb-3">
       <v-col md="5">
-        <v-card height="600px">
+        <v-card height="900px">
           <v-container>
               <h2 class="mb-5 text-left">Supplier name</h2>
             <supTable />

@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form id="form">
     <v-container class="mb-7">
       <v-col>
         <v-row>
@@ -45,8 +45,10 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-btn class="mr-4" @click="submit" color="primary"> submit </v-btn>
-      <v-btn @click="clear" color="grey" dark> clear </v-btn>
+      <div class="text-right">
+        <v-btn class="mr-4" @click="submit" color="primary"> submit </v-btn>
+        <v-btn @click="clear" color="grey" dark> clear </v-btn>
+      </div>
     </v-container>
   </form>
 </template>
@@ -155,3 +157,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+#form {
+  background-color: white;
+}
+</style>
