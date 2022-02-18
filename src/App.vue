@@ -9,6 +9,7 @@
           color="#101357"
           dark
           v-if="email == 'simplestore.owner@gmail.com' || email == 'test@gmail.com'"
+          height="80"
         >
           <v-toolbar-title><h2>Stock control & Inventory</h2></v-toolbar-title>
           <v-spacer></v-spacer>
@@ -42,7 +43,7 @@
             <v-icon>mdi-logout</v-icon>
           </v-btn>
         </v-app-bar>
-        <v-app-bar color="#101357" dark v-else>
+        <v-app-bar color="#101357" dark height="80" v-else>
           <v-toolbar-title><h2>Simple Store</h2></v-toolbar-title>
           <v-spacer></v-spacer>
           <v-menu v-if="isLogedIn" offset-y>
@@ -113,6 +114,14 @@
         <router-view />
       </v-card>
     </div>
+    <v-footer padless color="grey" dark>
+    <v-col
+      class="text-center"
+      cols="12"
+    >
+      {{ new Date().getFullYear() }} — <strong>Stock and Inventory Management System</strong>
+    </v-col>
+  </v-footer>
   </v-app>
 </template>
 <script>

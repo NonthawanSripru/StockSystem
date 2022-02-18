@@ -12,7 +12,7 @@
       </div>
       <div class="card-body">
         <!-- <router-link :to="{ name: 'ShowDetails', params: { id: product.id } }"> -->
-        <h5 class="card-title ml-1">{{ product.prod_name }}</h5>
+        <h5 class="card-title ml-1">{{ product.prod_name.substring(0, 20) }}</h5>
         <!-- </router-link> -->
         <v-row class="mt-1 mr-1 ml-1">
           <p class="card-text">Price : {{ product.price }} Baht</p>
@@ -20,7 +20,7 @@
           <p class="card-text">Stock : {{ product.remain }}</p>
         </v-row>
         <p class="card-text font-italic ml-1">
-          {{ product.detail.substring(0, 65) }}...
+          {{ product.detail.substring(0, 20) }}...
         </p>
         <!-- </div> -->
       </div>
@@ -37,8 +37,8 @@
           </v-col >
         </v-row>
       </div>
-      <div class="mt-3">
-        <v-btn @click="addCart">Add Cart</v-btn>
+      <div class="d-flex justify-center mt-1 mb-1">
+        <v-btn @click="addCart" color="success">Add Cart</v-btn>
       </div>
     </v-container>
   </v-card>
