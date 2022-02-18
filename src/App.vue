@@ -8,10 +8,7 @@
         <v-app-bar
           color="#101357"
           dark
-          v-if="
-            email === 'simplestore.owner@gmail.com' &&
-            email === 'test@gmail.com'
-          "
+          v-if="email == 'simplestore.owner@gmail.com' || email == 'test@gmail.com'"
         >
           <v-toolbar-title><h2>Stock control & Inventory</h2></v-toolbar-title>
           <v-spacer></v-spacer>

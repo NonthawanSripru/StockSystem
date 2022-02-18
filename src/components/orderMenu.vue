@@ -141,12 +141,12 @@ export default {
       dialogOrder: false,
       search: "",
       headers: [
-        {
-          text: "Order ID",
-          align: "start",
-          sortable: false,
-          value: "order_id",
-        },
+        // {
+        //   text: "Order ID",
+        //   align: "start",
+        //   sortable: false,
+        //   value: "order_id",
+        // },
         // { text: "Product ID", value: "prod_id" },
         { text: "Product Name", value: "prod_name" },
         { text: "Amount", value: "amount" },
