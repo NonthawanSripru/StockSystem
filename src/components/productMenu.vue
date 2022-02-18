@@ -71,14 +71,22 @@
                       </v-col>
                       <v-col cols="16" sm="6" md="4">
                         <v-text-field
-                          v-model="category.cate_id"
+                          v-model="id"
                           label="Category ID"
+                          :error-messages="idErrors"
+                          required
+                          @input="$v.id.$touch()"
+                          @blur="$v.id.$touch()"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="16" sm="6" md="4">
                         <v-text-field
-                          v-model="category.cate_name"
+                          v-model="name"
                           label="Category Name"
+                          :error-messages="nameErrors"
+                          required
+                          @input="$v.name.$touch()"
+                          @blur="$v.name.$touch()"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="16" sm="6" md="1">
@@ -154,7 +162,7 @@
                           hide-no-data
                           hide-details
                           label="Choose category"
-                          solo-inverted
+                          solo
                           @click="showCate"
                         ></v-autocomplete>
                       </v-col>
@@ -267,13 +275,23 @@
 <script>
 import { db } from "../firebaseDb";
 import firebase from "firebase";
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
 
 export default {
   // components:{
   //   QrcodeVue,
   // },
+  mixins: [validationMixin],
+
+  validations: {
+    id: { required },
+    name: { required },
+  },
+
   data: () => ({
-    // img1: null,
+    id: "",
+    name: "",
     dialog: false,
     dialogCate: false,
     dialogDelete: false,
@@ -313,31 +331,24 @@ export default {
       detail: "",
       price: 0,
       remain: 0,
-      notify:0,
+      notify: 0,
       image: "",
     },
-    // defaultItem: {
-    //   prod_name: "",
-    //   category: "",
-    //   detail: "",
-    //   price: 0,
-    //   remain: 0,
-    //   image: "",
-    // },
+    defaultItem: {
+      prod_name: "",
+      category: "",
+      detail: "",
+      price: 0,
+      remain: 0,
+      notify: 0,
+      image: ""
+    },
     loading: false,
     items: [],
     search: null,
     // select: null,
     // states: ["Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas"],
   }),
-
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1
-        ? "New Product"
-        : "Edit Product Information";
-    },
-  },
 
   watch: {
     dialog(val) {
@@ -360,7 +371,25 @@ export default {
   created() {
     this.initialize();
   },
-
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1
+        ? "New Product"
+        : "Edit Product Information";
+    },
+    idErrors() {
+      const errors = [];
+      if (!this.$v.id.$dirty) return errors;
+      !this.$v.id.required && errors.push("id is required");
+      return errors;
+    },
+    nameErrors() {
+      const errors = [];
+      if (!this.$v.name.$dirty) return errors;
+      !this.$v.name.required && errors.push("name is required");
+      return errors;
+    },
+  },
   methods: {
     showCate() {
       console.log(this.categories);
@@ -451,6 +480,7 @@ export default {
       this.dialogCate = false;
       this.$nextTick(() => {
         this.editedIndex = -1;
+        this.editedItem = this.defaultItem;
       });
     },
 
@@ -458,24 +488,26 @@ export default {
       this.dialogDelete = false;
       this.$nextTick(() => {
         this.editedIndex = -1;
+        this.editedItem = this.defaultItem;
       });
     },
 
     addCate() {
+      this.$v.$touch();
+      if(this.$v.$error) return
+      else
       db.collection("category")
-        .add(this.category)
+        .add({"cate_id":this.id,"cate_name":this.name})
         .then(() => {
-          this.category.id = "";
-          this.category.cate_name = "";
+          this.id = "";
+          this.name = "";
         })
         .catch((error) => {
           console.log(error);
         });
     },
 
-    checkStock(){
-
-    },
+    checkStock() {},
 
     save() {
       if (this.editedIndex > -1) {

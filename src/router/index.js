@@ -20,9 +20,9 @@ const routes = [
     component: () => import('../views/Product.vue')
   },
   {
-    path: '/ShowDetails',
-    name: 'ShowDetails',
-    component: () => import('../views/ShowDetails.vue')
+    path: '/Order',
+    name: 'Order',
+    component: () => import('../views/Order.vue')
   },
   {
     path: '/ScanQR-Product',

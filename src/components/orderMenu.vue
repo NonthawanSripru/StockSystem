@@ -90,14 +90,14 @@
     </v-dialog>
 
     <v-card>
-      <v-card-title>
+      <!-- <v-card-title>
         Orders List
-      </v-card-title>
+      </v-card-title> -->
       <v-data-table
         :headers="headers"
         :items="orders"
         :search="search"
-        class="mr-5 ml-5"
+        class="mr-5 ml-5 mt-2"
       >
         <template v-slot:item.prod_name="{ item }">
           <td>

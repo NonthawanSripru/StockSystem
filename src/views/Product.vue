@@ -20,7 +20,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { db } from "../firebaseDb";
 import ProductBox from "../components/ProductBox";
@@ -58,31 +57,35 @@ export default {
       });
 
       db.collection("category").onSnapshot((snapshotChange) => {
-        this.select = [];
+        this.select = ["All Product"];
         snapshotChange.forEach((item) => {
           this.select.push(item.data().cate_name);
         });
       });
     },
     getProduct() {
-      db.collection("product")
-        .where("category", "==", this.search)
-        .onSnapshot((snapshotChange) => {
-          this.products = [];
-          snapshotChange.forEach((doc) => {
-            this.products.push({
-              prod_id: doc.id,
-              prod_name: doc.data().prod_name,
-              category: doc.data().category,
-              detail: doc.data().detail,
-              price: doc.data().price,
-              // qrcode: doc.data().qrcode,
-              notify: doc.data().notify,
-              image: doc.data().image,
-              remain: doc.data().remain,
+      if (this.search != "All Product") {
+        db.collection("product")
+          .where("category", "==", this.search)
+          .onSnapshot((snapshotChange) => {
+            this.products = [];
+            snapshotChange.forEach((doc) => {
+              this.products.push({
+                prod_id: doc.id,
+                prod_name: doc.data().prod_name,
+                category: doc.data().category,
+                detail: doc.data().detail,
+                price: doc.data().price,
+                // qrcode: doc.data().qrcode,
+                notify: doc.data().notify,
+                image: doc.data().image,
+                remain: doc.data().remain,
+              });
             });
           });
-        });
+      } else {
+        this.initialize()
+      }
     },
   },
   //   mounted(){

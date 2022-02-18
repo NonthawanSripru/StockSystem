@@ -1,0 +1,12 @@
+<template>
+  <div>
+    <iframe
+      title="order-analyse"
+      width="1100"
+      height="600"
+      src="https://app.powerbi.com/view?r=eyJrIjoiMGMyNmI4ZmEtOTAwOS00OGFhLWE3ZGEtNGQ2ZTg0MmQ0ZWI3IiwidCI6ImU0OWRhNTdiLWI2MDItNDY2Ny1iMjU3LWYyMjgxOWUwZjA5MCIsImMiOjEwfQ%3D%3D&pageName=ReportSection"
+      frameborder="0"
+      allowFullScreen="true"
+    ></iframe>
+  </div>
+</template>

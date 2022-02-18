@@ -2,16 +2,13 @@
   <v-card color="grey lighten-3">
     <v-layout>
       <v-flex>
-        <v-navigation-drawer
-          v-model="drawer"
-          permanent
-        >
+        <v-navigation-drawer v-model="drawer" permanent>
           <v-list-item class="tile">
             <v-list-item-avatar>
               <v-icon large>mdi-account-circle-outline</v-icon>
             </v-list-item-avatar>
 
-            <v-list-item-title>{{email}}</v-list-item-title>
+            <v-list-item-title>{{ email }}</v-list-item-title>
 
             <!-- <v-btn icon @click.stop="mini = !mini">
               <v-icon>mdi-chevron-left</v-icon>
@@ -66,8 +63,8 @@ export default {
   },
   data() {
     return {
-      isLogedIn:"",
-      email:"",
+      isLogedIn: "",
+      email: "",
       drawer: true,
       items: [
         {
@@ -95,17 +92,12 @@ export default {
           icon: "mdi-archive-star",
           route: { name: "home", params: { page: "supplierMenu" } },
         },
-        {
-          title: "Reports",
-          icon: "mdi-file-chart",
-          route: { name: "home", params: { page: "reportMenu" } },
-        },
       ],
       mini: true,
     };
   },
-  created(){
-    this.checkLogin()
+  created() {
+    this.checkLogin();
   },
   methods: {
     checkLogin() {
@@ -114,7 +106,13 @@ export default {
           // User is signed in.
           this.email = user.email;
           this.isLogedIn = true;
-          // console.log(user)
+          if (user.email == "simplestore.owner@gmail.com"){
+            this.items.push({
+              title: "Reports",
+              icon: "mdi-file-chart",
+              route: { name: "home", params: { page: "reportMenu" } }
+            });
+          }
         } else {
           // No user is signed in.
           // this.$router.replace("/");
@@ -132,12 +130,12 @@ export default {
 };
 </script>
 <style scoped>
-  .tile {
-    margin: 5px;
-    border-radius: 4px;
-    background-color: rgb(250, 230, 174);
-  }
-  /* .tile:hover {
+.tile {
+  margin: 5px;
+  border-radius: 4px;
+  background-color: rgb(250, 230, 174);
+}
+/* .tile:hover {
     background: green;
   }
   .tile:active {

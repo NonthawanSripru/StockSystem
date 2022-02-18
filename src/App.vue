@@ -5,8 +5,14 @@
   <v-app>
     <div>
       <v-card class="mx-auto overflow-hidden" height="auto">
-        <v-app-bar color="#101357" dark v-if="email == 'test@gmail.com'">
-        <!-- <v-app-bar color="white" v-if="email == 'test@gmail.com'"> -->
+        <v-app-bar
+          color="#101357"
+          dark
+          v-if="
+            email === 'simplestore.owner@gmail.com' &&
+            email === 'test@gmail.com'
+          "
+        >
           <v-toolbar-title><h2>Stock control & Inventory</h2></v-toolbar-title>
           <v-spacer></v-spacer>
           <v-menu v-if="isLogedIn" offset-y>
@@ -56,7 +62,10 @@
               </v-btn>
             </template>
             <v-list width="300px">
-              <v-subheader><h3>My carts</h3></v-subheader>
+              <v-subheader
+                ><h3>My carts</h3><v-spacer/>
+                <v-btn to="/order" color="primary" text> History</v-btn>
+              </v-subheader>
               <v-divider></v-divider>
               <v-list-item v-for="(item, i) in cart" :key="i" class="ml-5">
                 <v-list-item-content @click="MarkAsRead(item)">
@@ -69,7 +78,7 @@
               </v-list-item>
               <v-divider></v-divider>
               <v-list-item-action>
-                <v-btn class="mt-2" color="primary" @click="orderProduct"
+                <v-btn class="mt-2" color="primary" @click="addOrder"
                   >Order</v-btn
                 >
               </v-list-item-action>
@@ -80,6 +89,30 @@
             <v-icon>mdi-logout</v-icon>
           </v-btn>
         </v-app-bar>
+        <v-dialog v-model="dialogOrder" width="500">
+          <v-card>
+            <v-card-title>Add your address informations</v-card-title>
+            <div class="mx-10">
+              <v-textarea
+                v-model="address"
+                placeholder="Fill your address ex : Plot/House number, Village Road Subdistrict, District Province Postal Code THAILAND"
+                outlined
+              ></v-textarea>
+              <v-text-field
+                v-model="phone"
+                placeholder="Fill your phone"
+                outlined
+              ></v-text-field>
+            </div>
+            <v-card-actions>
+              <v-row class="mx-5 mt-2 mb-5">
+                <v-btn @click="dialogOrder = false">close</v-btn>
+                <v-spacer />
+                <v-btn @click="orderProduct">save</v-btn>
+              </v-row>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <router-view />
       </v-card>
     </div>
@@ -92,6 +125,7 @@ import firebase from "firebase";
 export default {
   data: () => ({
     // drawer: false,
+    dialogOrder: false,
     userRole: null,
     products: [],
     cart: [],
@@ -101,7 +135,9 @@ export default {
     cuser: "",
     messages: 0,
     remain: 0,
-    role:""
+    role: "",
+    address: "",
+    phone: "",
   }),
   methods: {
     getRemain() {
@@ -170,6 +206,9 @@ export default {
           remain: this.remain + amount,
         });
     },
+    addOrder() {
+      this.dialogOrder = true;
+    },
     orderProduct() {
       var today = new Date();
       var order = [];
@@ -185,7 +224,9 @@ export default {
       obj["employee"] = this.email;
       obj["order"] = order;
       obj["totalPrice"] = totalPrice;
-      // console.log(obj);
+      obj["cus_address"] = this.address;
+      obj["cus_phone"] = this.phone;
+      console.log(obj);
 
       db.collection("order")
         .add(obj)
@@ -200,6 +241,8 @@ export default {
           await collref.doc(doc.id).delete();
         });
       });
+
+      this.dialogOrder = false;
     },
     getNotification() {
       this.messages = this.products.length;
