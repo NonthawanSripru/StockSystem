@@ -153,6 +153,7 @@ export default {
         { text: "Total", value: "total" },
         { text: "Date", value: "date" },
         { text: "Total price (Baht)", value: "totalPrice" },
+        { text: "Address", value: "cus_address" },
         { text: "Customer", value: "customer" },
         { text: "Actions", value: "actions", sortable: false },
       ],
@@ -193,6 +194,7 @@ export default {
             totalPrice: doc.data().totalPrice,
             date: doc.data().date,
             customer: doc.data().employee,
+            cus_address:doc.data().cus_address
           });
         });
       });
