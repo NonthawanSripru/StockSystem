@@ -310,6 +310,7 @@ export default {
   created() {
     this.checkLogin();
     this.getNotification();
+    this.getRemain();
   },
   mounted() {
     this.getRemain();
